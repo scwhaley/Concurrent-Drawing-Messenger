@@ -10,13 +10,25 @@ class App extends React.Component{
     super();
     this.state = {isLoggedIn: false};
   }
+
+  loginSubmitHandler = (event) => {
+    this.setState({isLoggedIn: true});
+}
+
   render(){
     if(this.state.isLoggedIn === false){
       return(
         <div className="TopAppDiv">
-          <Login/>
+          <Login loginSubmitHandler={this.loginSubmitHandler.bind(this)}/>
         </div>
       );
+    }
+    else{
+      return(
+        <div className="TopAppDiv">
+          <p>Logged in</p>
+        </div>
+      )
     }
   };
 };

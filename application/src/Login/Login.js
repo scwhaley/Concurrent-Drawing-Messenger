@@ -18,7 +18,7 @@ class Login extends Component{
     }
 
     loginSubmitHandler = (event) => {
-        alert(`Attempting to log in ${this.state.loginUsername} with password ${this.state.loginPassword}`);
+        this.props.loginSubmitHandler(event);
     }
 
     render(){
