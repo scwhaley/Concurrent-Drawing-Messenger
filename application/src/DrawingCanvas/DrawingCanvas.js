@@ -1,46 +1,54 @@
 import React, { Component } from 'react';
 import './DrawingCanvas.css';
-import { Client, Message, Stomp } from 'stomp-js';
-import {SockJS} from 'sockjs'
+import { Client } from '@stomp/stompjs';
 
 class DrawingCanvas extends Component{
     constructor(){
         super();
 
-        var stomp_args = {
-                    port: 8080,
-                    host: 'localhost',
-                    debug: true,
-                    login: 'guest',
-                    passcode: 'guest',
-                };
-                
-        var ws = new SockJS('ws://localhost:8080/greeting');
-        var client = Stomp.(ws);  
-        client.
+        var stompClient;
 
-    
+        var stompConfig = {
+            connectHeaders: {
+                login: "guest",
+                passcode: "guest"
+            },
 
+            brokerURL: "ws://localhost:8080/greeting/websocket",
+
+            debug: (str) => {console.log("Stomp: " + str)},
+
+            reconnectDelay: 200,
+
+            onConnect: (frame) => {
+                console.log("Connected. Frame: " + frame);
+                console.log("Subscripting to /topic/test...");
+                const subscription = stompClient.subscribe("/topic/test", (message) => {
+                    const payload = JSON.parse(message.body);
+                    console.log("Recieved message from subscription. Response body: " + payload);
+                })
+            }
+        };
+
+        stompClient = new Client(stompConfig);
+        stompClient.activate();
+                  
         this.state = {
-            wsClient: client
-        }
-        
+            stompClient: stompClient
+        };
     }
 
-    
-
     ConnectClick(){
-
     }
 
     SubscribeClick(){
-        this.state.wsClient.subscribe('/topic/test', () => {alert("message from subscription")});
+        //this.state.wsClient.subscribe('/topic/test', () => {alert("message from subscription")});
     }
 
-    SendClick(){
+    SendClick = () => {
+        console.log(this.state.stompClient);
+        this.state.stompClient.publish({destination: "/app/message", body: "Hello, STOMP"});
     }
-
-
 
     render(){
         return(
