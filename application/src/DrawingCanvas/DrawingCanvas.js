@@ -18,7 +18,8 @@ class DrawingCanvas extends Component{
             brokerURL: "ws://localhost:8080/greeting/websocket",
             reconnectDelay: 200,
             onConnect: (frame) => {
-                const subscription = this.state.stompClient.subscribe("/topic/test", this.handleIncomingDrawCommands)
+                console.log("Connected")
+                const subscription = this.state.stompClient.subscribe("/topic/test/room1", this.handleIncomingDrawCommands)
             }
         };
 
@@ -77,7 +78,7 @@ class DrawingCanvas extends Component{
     cavasOnMouseMove = (e) => {
         if(this.state.mouseIsDown){
             var line = new Line(this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
-            this.state.stompClient.publish({destination: "/app/message", body: JSON.stringify(line)});
+            this.state.stompClient.publish({destination: "/app/message/room1", body: JSON.stringify(line)});
             this.setState({
                 canvasLastX: e.offsetX,
                 canvasLastY: e.offsetY
