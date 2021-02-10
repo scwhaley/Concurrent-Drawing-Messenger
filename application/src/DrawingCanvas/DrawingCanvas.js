@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './DrawingCanvas.css';
 import { Client } from '@stomp/stompjs';
+import Line from './Line'
 
 class DrawingCanvas extends Component{
     constructor(){
@@ -14,23 +15,15 @@ class DrawingCanvas extends Component{
                 login: "guest",
                 passcode: "guest"
             },
-
             brokerURL: "ws://localhost:8080/greeting/websocket",
-
-            debug: (str) => {console.log("Stomp: " + str)},
-
             reconnectDelay: 200,
-
             onConnect: (frame) => {
-                console.log("Connected. Frame: " + frame);
-
+                const subscription = this.state.stompClient.subscribe("/topic/test", this.handleIncomingDrawCommands)
             }
         };
 
         stompClient = new Client(stompConfig);
 
-
-           
         this.state = {
             stompClient: stompClient,
             mouseIsDown: false,
@@ -51,42 +44,31 @@ class DrawingCanvas extends Component{
         canvas.addEventListener("mousedown", this.canvasOnMouseDown, false);
         canvas.addEventListener("mouseup", this.canvasOnMouseUp, false);
         canvas.addEventListener("mousemove", this.cavasOnMouseMove, false);
+
+        this.state.stompClient.activate();
+
         this.setState({
             canvasContext: ctx,
             canvas: canvas
         });
     }
 
-    ConnectClick = () => {
-        this.state.stompClient.activate();
-    }
-
-    SubscribeClick = () => {
-        console.log("Subscribing to /topic/test...");
-        const subscription = this.state.stompClient.subscribe("/topic/test", (message) => {
-            //const payload = JSON.parse(message.body);
-            console.log("Recieved message from subscription. Response body: " + message.body);
-        })
-    };
-
-    SendClick = () => {
-        console.log(this.state.stompClient);
-        this.state.stompClient.publish({destination: "/app/message", body: "Hello, STOMP"});
+    handleIncomingDrawCommands = (message) => {
+        const payload = JSON.parse(message.body);
+        this.drawLine(this.state.canvasContext, payload.x1, payload.y1, payload.x2, payload.y2);
     }
 
     canvasOnMouseDown = (e) => {
-        console.log("canvasOnMouseDown event called");
-        this.setState({mouseIsDown: true});
         this.setState({
+            mouseIsDown: true,
             canvasLastX: e.offsetX,
             canvasLastY: e.offsetY
         })
     }
 
     canvasOnMouseUp = (e) => {
-        console.log("canvasOnMouseUp event called");
-        this.setState({mouseIsDown: false});
         this.setState({
+            mouseIsDown: false,
             canvasLastX: e.offsetX,
             canvasLastY: e.offsetY
         })
@@ -94,8 +76,8 @@ class DrawingCanvas extends Component{
 
     cavasOnMouseMove = (e) => {
         if(this.state.mouseIsDown){
-            console.log("canvasOnMouseMove event called. (" + e.offsetX + ", " + e.offsetY + ")");
-            this.drawLine(this.state.canvasContext, this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
+            var line = new Line(this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
+            this.state.stompClient.publish({destination: "/app/message", body: JSON.stringify(line)});
             this.setState({
                 canvasLastX: e.offsetX,
                 canvasLastY: e.offsetY
@@ -116,9 +98,6 @@ class DrawingCanvas extends Component{
     render(){
         return(
             <div>
-                <button onClick={this.ConnectClick}>Connect</button>
-                <button onClick={this.SubscribeClick}>Subscribe</button>
-                <button onClick={this.SendClick}>Send Message</button>
                 <canvas id="CanvasID" />
             </div>
         );
