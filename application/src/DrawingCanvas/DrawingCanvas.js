@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './DrawingCanvas.css';
 import { Client } from '@stomp/stompjs';
 import Line from './Line'
+import Message from './Message'
 
 class DrawingCanvas extends Component{
     constructor(){
@@ -55,8 +56,18 @@ class DrawingCanvas extends Component{
     }
 
     handleIncomingDrawCommands = (message) => {
+        console.log(message);
         const payload = JSON.parse(message.body);
-        this.drawLine(this.state.canvasContext, payload.x1, payload.y1, payload.x2, payload.y2);
+        const content = payload.content;
+
+        switch(payload.type) {
+            case "Draw":
+                this.drawLine(this.state.canvasContext, content.x1, content.y1, content.x2, content.y2);
+            case "Refresh":
+                break;
+            default:
+                break;
+        }
     }
 
     canvasOnMouseDown = (e) => {
@@ -78,7 +89,8 @@ class DrawingCanvas extends Component{
     cavasOnMouseMove = (e) => {
         if(this.state.mouseIsDown){
             var line = new Line(this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
-            this.state.stompClient.publish({destination: "/app/message/room1", body: JSON.stringify(line)});
+            var message = new Message("Draw", line);
+            this.state.stompClient.publish({destination: "/app/message/room1", body: JSON.stringify(message)});
             this.setState({
                 canvasLastX: e.offsetX,
                 canvasLastY: e.offsetY
@@ -94,7 +106,7 @@ class DrawingCanvas extends Component{
         context.lineTo(x2,y2);
         context.stroke();
         context.closePath();
-    }
+    };
 
     render(){
         return(

@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import org.slf4j.Logger;
@@ -30,5 +31,10 @@ public class CanvasController {
         String dest = "/topic/test/" + room;
         //logger.info("Sending response to " + dest);
         this.template.convertAndSend(dest, name);
+    }
+
+    @SubscribeMapping("/test/{room}")
+    public void processSubscriptionFromClient(@DestinationVariable String room, Principal principal){
+        logger.info("Recieved subscription");
     }
 }
