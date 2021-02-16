@@ -36,5 +36,13 @@ public class CanvasController {
     @SubscribeMapping("/test/{room}")
     public void processSubscriptionFromClient(@DestinationVariable String room, Principal principal){
         logger.info("Recieved subscription");
+
+        Message syncMessage = new Message();
+        syncMessage.setType("Sync");
+        syncMessage.setContent("");
+        
+        String dest = "/topic/test/" + room;
+
+        this.template.convertAndSend(dest, syncMessage);
     }
 }

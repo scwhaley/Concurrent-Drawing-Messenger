@@ -19,8 +19,8 @@ class DrawingCanvas extends Component{
             brokerURL: "ws://localhost:8080/greeting/websocket",
             reconnectDelay: 200,
             onConnect: (frame) => {
-                console.log("Connected")
-                const subscription = this.state.stompClient.subscribe("/topic/test/room1", this.handleIncomingDrawCommands)
+                console.log("Connected");
+                const subscription = this.state.stompClient.subscribe("/topic/test/room1", this.handleIncomingMessages);
             }
         };
 
@@ -55,21 +55,46 @@ class DrawingCanvas extends Component{
         });
     }
 
-    handleIncomingDrawCommands = (message) => {
+    handleIncomingMessages = (message) => {
         console.log(message);
+        
+        // Parse the message
         const payload = JSON.parse(message.body);
         const content = payload.content;
 
+        // Call the appropriate function based on message type
         switch(payload.type) {
             case "Draw":
                 this.drawLine(this.state.canvasContext, content.x1, content.y1, content.x2, content.y2);
+                break;
             case "Refresh":
+                this.drawImageToCanvas(content);
+                break;
+            case "Sync":
+                this.handleSync();
                 break;
             default:
                 break;
         }
     }
 
+    // Uses a dataURL to draw an image to the canvas
+    drawImageToCanvas = (imgDataURL) => {
+        var img = new Image();
+        img.onload = () => {
+            this.state.canvasContext.drawImage(img,0,0);
+        };
+        img.src = imgDataURL;
+    }
+
+    // Sends a message containing an dataURL representing the current state of the canvas
+    handleSync = () => {
+        var canvasDataURL = this.state.canvas.toDataURL();
+        var message = new Message("Refresh", canvasDataURL);
+        this.state.stompClient.publish({destination: "/app/message/room1", body: JSON.stringify(message)});
+    }
+
+    // Drawing functions
     canvasOnMouseDown = (e) => {
         this.setState({
             mouseIsDown: true,
@@ -78,6 +103,7 @@ class DrawingCanvas extends Component{
         })
     }
 
+    // Drawing functions
     canvasOnMouseUp = (e) => {
         this.setState({
             mouseIsDown: false,
@@ -86,6 +112,7 @@ class DrawingCanvas extends Component{
         })
     }
 
+    // Drawing functions
     cavasOnMouseMove = (e) => {
         if(this.state.mouseIsDown){
             var line = new Line(this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
@@ -98,6 +125,7 @@ class DrawingCanvas extends Component{
         }
     }
 
+    // Drawing functions
     drawLine = (context, x1, y1, x2, y2) => {
         context.beginPath();
         context.strokeStyle = "black";
