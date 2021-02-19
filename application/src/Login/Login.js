@@ -18,12 +18,9 @@ class Login extends Component{
     }
 
     loginSubmitHandler = (event) => {
-        this.props.loginSubmitHandler(event);
-        event.preventDefault();
-         fetch('http://localhost:8080/api/greeting')
-             .then(response => response.json())
-             .then(data => console.log(data));
-        
+        localStorage.setItem("isLoggedIn", "True");
+        console.log("Created isLoggedIn and set to True")
+        event.preventDefault();        
     }
 
     render(){

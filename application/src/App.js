@@ -50,7 +50,7 @@ class App extends React.Component{
             <Home/>
           </Route>
 
-          <PrivateRoute path="/main" isLoggedIn={this.state.isLoggedIn}>
+          <PrivateRoute path="/main" component={Sidebar}>
             <Sidebar sidebarToggleClick={this.sidebarToggleClick.bind(this)}/>
             <DrawingCanvas/>
           </PrivateRoute>

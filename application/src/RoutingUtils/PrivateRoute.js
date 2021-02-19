@@ -7,8 +7,9 @@ class PrivateRoute extends Component {
     }
 
     render(){
-        console.log("this.props.isLoggedIn is " + this.props.isLoggedIn);
-        if(this.props.isLoggedIn === true){
+        var isLoggedIn = localStorage.getItem("isLoggedIn");
+        console.log("isLoggedIn = " + isLoggedIn)
+        if(isLoggedIn === "True"){
             return(
                 <Route path={this.props.path} exact={this.props.exact} component={this.props.component}/>
             )
