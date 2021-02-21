@@ -1,25 +1,9 @@
-import { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
+import {checkIfAlreadyLoggedIn} from "../Login/authenticate"
 
-class PrivateRoute extends Component {
-    constructor(){
-        super();
-    }
-
-    render(){
-        var isLoggedIn = localStorage.getItem("isLoggedIn");
-        console.log("isLoggedIn = " + isLoggedIn)
-        if(isLoggedIn === "True"){
-            return(
-                <Route path={this.props.path} exact={this.props.exact} component={this.props.component}/>
-            )
-        }
-        else{
-            return(
-                <Redirect to="/login"/>
-            )
-        }
-    }
+function PrivateRoute(props) {
+    var isLoggedIn = checkIfAlreadyLoggedIn();
+    return(isLoggedIn ? <Route path={props.path} exact={props.exact} component={props.component}/> : <Redirect to="/login"/>)
 }
 
 export default PrivateRoute;

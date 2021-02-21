@@ -1,54 +1,52 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom';
 import './Login.css';
+import {authenticate} from "./authenticate";
 
-class Login extends Component{
-    constructor(){
-        super();
-        this.state = {
-            loginUsername: "",
-            loginPassword: "",
-            chooseUsername: "",
-            choosePassword: "",
-            confirmPassword: ""
+function Login(){
+    var [username, setUsername] = useState("");
+    var [password, setPassword] = useState("");
+
+    //Get browser history
+    let history = useHistory();
+
+    var usernameChangeHandler = (event) => {
+        setUsername(event.target.value);
+        console.log("Username = " + username);
+    }
+
+    var passwordChangeHandler = (event) => {
+        setPassword(event.target.value);
+        console.log("Password = " + password);
+    }
+
+    //Upon log in submission, redirect the user to the page they came from
+    var loginSubmitHandler = (event) => {
+        var isLoggedIn = authenticate();
+
+        if(isLoggedIn === true){
+            history.goBack()
         };
+
+        event.preventDefault();   
     }
 
-    loginChangeHandler = (event) => {
-        this.setState({[event.target.id]: event.target.value});
-    }
 
-    loginSubmitHandler = (event) => {
-        localStorage.setItem("isLoggedIn", "True");
-        console.log("Created isLoggedIn and set to True")
-        event.preventDefault();        
-    }
-
-    render(){
-        return(
-            <div className="loginPage">
-                <div className="loginForm">
-                    <h2>Login</h2>
-                    <form onSubmit={this.loginSubmitHandler}>
-                        <input id="loginUsername" type="text" placeholder="Username" onChange={this.loginChangeHandler} aria-label="Login Username"></input><br/>
-                        <input id="loginPassword" type="text" placeholder="Password" onChange={this.loginChangeHandler} aria-label="Login Password"></input><br/>
-                        <div className="submitButton">
-                            <input id="submit" type="submit" value="Submit"/>
-                        </div>
-                    </form>
-                    <span>or</span>
-                    <h2>Sign up here!</h2>
-                    <form>
-                        <input id="chooseUsername" type="text" placeholder="Choose Username" aria-label="Choose Username"></input><br/>
-                        <input id="choosePassword" type="text" placeholder="Choose Password" aria-label="Choose Password"></input><br/>
-                        <input id="confirmPassword" type="text" placeholder="Confirm Password" aria-label="Confirm Password"></input><br/>
-                        <div className="submitButton">
-                            <input id="createAccount" type="submit" value="Create Account"/>
-                        </div>
-                    </form>
-                </div>
+    return(
+        <div className="loginPage">
+            <div className="loginForm">
+                <h2>Login</h2>
+                <form onSubmit={loginSubmitHandler}>
+                    <input id="loginUsername" type="text" placeholder="Username" onChange={usernameChangeHandler} aria-label="Login Username"></input><br/>
+                    <input id="loginPassword" type="text" placeholder="Password" onChange={passwordChangeHandler} aria-label="Login Password"></input><br/>
+                    <div className="submitButton">
+                        <input id="submit" type="submit" value="Submit"/>
+                    </div>
+                </form>
             </div>
-        );
-    }
+        </div>
+    );
+    
 }
 
 export default Login
