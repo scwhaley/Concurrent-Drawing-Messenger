@@ -1,6 +1,23 @@
 import React from 'react'
 
 function Signup(){
+
+    function testAPI(){
+        console.log("clicked");
+        // fetch("http://localhost:8080/api/greeting", {
+        //     credentials: 'include',
+        //     headers: {
+        //         'Access-Control-Allow-Credentials': true,
+        //         'Authorization': 'Basic dXNlcjpUZXN0MTIzNDU='
+        //       },
+        //   }).then(response => response.json()).then(data => console.log(data))
+
+          fetch('http://localhost:8080/api/greeting', {method:'GET', 
+          headers: {'Authorization': 'Basic ' + btoa('user:Test12345')}})
+          .then(response => response.json())
+          .then(json => console.log(json));
+    }
+
     return(
         <div>
             <h1>This is the Signup Page</h1>
@@ -13,6 +30,7 @@ function Signup(){
                     <input id="createAccount" type="submit" value="Create Account"/>
                 </div>
             </form>
+            <button onClick={testAPI}>Send GET</button>
         </div>
     );
 }
