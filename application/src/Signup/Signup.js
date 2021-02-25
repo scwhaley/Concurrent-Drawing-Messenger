@@ -13,7 +13,7 @@ function Signup(){
         //   }).then(response => response.json()).then(data => console.log(data))
 
           fetch('http://localhost:8080/api/greeting', {method:'GET', 
-          headers: {'Authorization': 'Basic ' + btoa('user:Test12345')}})
+          headers: {'Authorization': 'Basic ' + btoa('user:pass')}})
           .then(response => response.json())
           .then(json => console.log(json));
     }
