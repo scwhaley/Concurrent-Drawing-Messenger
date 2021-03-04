@@ -18,10 +18,10 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
  public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    DataSource dataSource;
+    // @Autowired
+    // DataSource dataSource;
 
-    @Override
+/*     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.jdbcAuthentication()
         .dataSource(dataSource)
@@ -36,7 +36,7 @@ import org.springframework.web.filter.CorsFilter;
             .password("pass")
             .roles("ADMIN")
         );
-    }
+    } */
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
