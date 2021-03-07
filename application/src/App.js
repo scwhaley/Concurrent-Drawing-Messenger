@@ -8,7 +8,7 @@ import Login from './Login/Login.js';
 import Sidebar from './Sidebar/Sidebar.js';
 import DrawingCanvas from './DrawingCanvas/DrawingCanvas.js';
 import Welcome from './Welcome/Welcome'
-import PrivateRoute from './RoutingUtils/PrivateRoute'
+import PrivateRoute from './Utils/PrivateRoute'
 import Signup from './Signup/Signup';
 
 function App(){

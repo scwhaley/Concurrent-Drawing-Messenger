@@ -9,6 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Optional;
 
+import com.example.demo.Security.User;
+import com.example.demo.Security.UserRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
