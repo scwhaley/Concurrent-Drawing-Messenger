@@ -4,12 +4,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Optional;
-
-import com.example.demo.Security.User;
+import com.example.demo.Security.ApplicationUser;
 import com.example.demo.Security.UserRepository;
 
 import org.slf4j.Logger;
@@ -40,11 +39,16 @@ public class DemoApplication {
 	}
 
 	@Bean
+    public BCryptPasswordEncoder getPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+	@Bean
 	public CommandLineRunner test(UserRepository repo){
 		return (args) -> {
 			logger.info("test2");
-			Optional<User> testFindUser = repo.findById(1);
-			logger.info(testFindUser.get().getUsername());
+			ApplicationUser testFindUser = repo.findByUsername("testUser1");
+			logger.info(testFindUser.getUsername());
 		};
 		
 	}

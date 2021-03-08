@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class ApplicationUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_id;
@@ -17,9 +17,9 @@ public class User {
     private String password;
     private boolean enabled;
 
-    protected User() {};
+    protected ApplicationUser() {};
 
-    public User(String username, String password){
+    public ApplicationUser(String username, String password){
         this.username = username;
         this.password = password;
         this.enabled = true;

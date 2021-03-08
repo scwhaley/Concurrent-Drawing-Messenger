@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,18 +18,18 @@ public class SignupController {
     private Logger logger = LoggerFactory.getLogger(DemoApplication.class);
     
 	@Autowired
-	private PasswordEncoder encoder;
+	private BCryptPasswordEncoder encoder;
     
     @Autowired
     private UserRepository userRepo;
 
     @PostMapping("/api/public/signup")
-    public void Signup(@RequestBody User newUser) {
+    public void Signup(@RequestBody ApplicationUser newUser) {
         logger.info("Adding new user with username = " + newUser.getUsername());
         newUser.setEnabled(true);
         
         
-        User existingUser = userRepo.findByUsername(newUser.getUsername());
+        ApplicationUser existingUser = userRepo.findByUsername(newUser.getUsername());
 
         //If username already exists
         if ( existingUser != null){

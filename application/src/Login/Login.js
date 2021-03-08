@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import './Login.css';
 import {authenticate} from "./authenticate";
+import User from "../User"
 
 function Login(){
     var [username, setUsername] = useState("");
@@ -22,11 +23,12 @@ function Login(){
 
     //Upon log in submission, redirect the user to the page they came from
     var loginSubmitHandler = (event) => {
-        var isLoggedIn = authenticate();
+        var user = new User(username, password);
+        var isLoggedIn = authenticate(user);
 
-        if(isLoggedIn === true){
-            history.goBack()
-        };
+        // if(isLoggedIn === true){
+        //     history.goBack()
+        // };
 
         event.preventDefault();   
     }

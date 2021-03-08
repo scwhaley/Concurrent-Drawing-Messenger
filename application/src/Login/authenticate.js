@@ -1,20 +1,27 @@
-export function authenticate(){
-    var isLoggedIn = checkIfAlreadyLoggedIn();
-    //If already logged in, return true. Else try to authenticate.
-    if(isLoggedIn){
-        return true;
-    }
-    else{
-        //Try to authenticate with credentials using server
-        //If success
-            //Mock successful authentication
-            localStorage.setItem("isLoggedIn", "True");
-            console.log("Created isLoggedIn and set to True")
-            return true;
-        //If failure
-            //TODO
-            //return false;
-    }
+import fetchJSON from "../Utils/FetchJSON";
+
+export function authenticate(user){
+
+    //Post user credentials to login URL
+    fetchJSON('http://localhost:8080/login',
+            {method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+            })
+            .then(response => {
+                console.log(response);
+                return response.headers;
+            })
+            .then(headers => headers.forEach(console.log))
+            .catch(error => {
+                console.log(error.responseJSON);
+                //console.log(error.responseJSON.message);
+                //setErrorMessage(error.responseJSON.message);
+                return false;
+            });
+
 }
 
 export function checkIfAlreadyLoggedIn(){

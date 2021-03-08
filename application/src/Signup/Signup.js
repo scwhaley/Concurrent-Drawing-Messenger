@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import User from "../User"
-import fetchJSON from '../Utils/fetchJSON';
+import fetchJSON from '../Utils/FetchJSON';
 import SignupError from "./SignupError"
 
 function Signup(){
@@ -16,19 +16,20 @@ function Signup(){
         var newUser = new User(username, password);
 
         fetchJSON('http://localhost:8080/api/public/signup', 
+        //fetchJSON('http://localhost:8080/login', 
         {method: 'POST', 
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(newUser)
         })
-        .then(json => {
-            console.log(json);
-        })
+        .then(response => response.JSON())
+        .then(json => console.log(json))
         .catch(error => {
-            console.log(error.responseJSON.message);
+            console.log(error.responseJSON);
+            //console.log(error.responseJSON.message);
             setSubmitError(true);
-            setErrorMessage(error.responseJSON.message)
+            //setErrorMessage(error.responseJSON.message)
         });
     }
 

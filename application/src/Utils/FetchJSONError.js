@@ -1,9 +1,10 @@
 class FetchJSONError extends Error {
     
-    constructor(responseJSON, ...params) {
+    constructor(response, responseBodyJSON, ...params) {
       // Pass remaining arguments (including vendor specific ones) to parent constructor
       super(...params);
-      this.responseJSON = responseJSON;
+      this.response = response
+      this.responseBodyJSON = responseBodyJSON;
     }
 }
 
