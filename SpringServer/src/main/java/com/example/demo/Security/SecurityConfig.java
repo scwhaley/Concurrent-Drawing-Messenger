@@ -43,6 +43,11 @@ import org.springframework.web.filter.CorsFilter;
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
+    // This method allows the React application (which sends requests from
+	// http://localhost:3000)
+	// to send HTTP requests to the Spring server API (which is on
+	// http://localhost:8080)
+	// Also allows for the Authorization header to be recieved (exposed) by the client
     @Bean
     public CorsFilter corsFilter(){
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -51,6 +56,7 @@ import org.springframework.web.filter.CorsFilter;
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
+        configuration.addExposedHeader("Authorization");
         source.registerCorsConfiguration("/**", configuration);
         return new CorsFilter(source);
     }

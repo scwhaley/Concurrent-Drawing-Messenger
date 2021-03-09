@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
+
 import com.example.demo.Security.ApplicationUser;
 import com.example.demo.Security.UserRepository;
 
@@ -24,20 +26,6 @@ public class DemoApplication {
 		logger.info("Test");
 	}
 
-	// This method allows the React application (which sends requests from
-	// http://localhost:3000)
-	// to send HTTP requests to the Spring server API (which is on
-	// http://localhost:8080)
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:3000");
-			};
-		};
-	}
-
 	@Bean
     public BCryptPasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -50,8 +38,6 @@ public class DemoApplication {
 			ApplicationUser testFindUser = repo.findByUsername("testUser1");
 			logger.info(testFindUser.getUsername());
 		};
-		
 	}
-
 
 }
