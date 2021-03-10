@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import './Login.css';
 import {authenticate} from "./authenticate";
 import User from "../User"
+import fetchJSON from "../Utils/FetchJSON";
 
 function Login(){
     var [username, setUsername] = useState("");
@@ -24,13 +25,41 @@ function Login(){
     //Upon log in submission, redirect the user to the page they came from
     var loginSubmitHandler = (event) => {
         var user = new User(username, password);
-        var isLoggedIn = authenticate(user);
+        console.log(JSON.stringify(user));
 
-        // if(isLoggedIn === true){
-        //     history.goBack()
-        // };
+        //Post user credentials to login URL
+        fetchJSON('http://localhost:8080/login',
+                {method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+                })
+                .then(response => {
+                    console.log(response);
+                    return response.headers;
+                })
+                //If successful, then get the JWT out of the Authorization header and store in local storage
+                .then(headers => {
+                    let JWT = headers.get('Authorization');
+                    localStorage.setItem('JWT', JWT);
+                    console.log('Set JWT in local storage')
+                    return true;
+                })
+                .then(successful => {
+                    console.log(successful)
+                    if(successful == true){
+                        console.log("Going back...")
+                        history.goBack()
+                    };
+                })
+                //If unsuccessful. log the error
+                .catch(error => {
+                    console.log("Error.response: " + error.response);
+                    console.log("Error.responseJSON: " + error.responseJSON);
+                });
 
-        event.preventDefault();   
+        event.preventDefault(); 
     }
 
 

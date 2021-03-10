@@ -15,12 +15,14 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.server.ResponseStatusException;
 
 public class LoginJWTCreationFilter extends UsernamePasswordAuthenticationFilter{
 
@@ -45,9 +47,11 @@ public class LoginJWTCreationFilter extends UsernamePasswordAuthenticationFilter
             return authManager.authenticate(new UsernamePasswordAuthenticationToken(userCreds.getUsername(), userCreds.getPassword()));
         }
         catch(IOException e){
+            logger.info("IO Exception");
             throw new RuntimeException(e);
         }
     }
+
     @Override    
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
@@ -63,6 +67,15 @@ public class LoginJWTCreationFilter extends UsernamePasswordAuthenticationFilter
         logger.info("Token is :" + token);
         //Add the JWT to the response back to the client
         response.addHeader("Authorization", token);
+    }
+
+    @Override    
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            AuthenticationException failed) throws IOException{
+
+        logger.info("Unsuccesful authentication.");
+        response.sendError(401, "Invalid credentials");
     }
     
 }

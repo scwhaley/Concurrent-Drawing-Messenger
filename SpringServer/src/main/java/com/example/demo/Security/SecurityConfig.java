@@ -34,6 +34,7 @@ import org.springframework.web.filter.CorsFilter;
             .anyRequest().authenticated()
             .and()
             .addFilter(new LoginJWTCreationFilter(authenticationManager()))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager()))
             //disables SpringSecurity's default session creation
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

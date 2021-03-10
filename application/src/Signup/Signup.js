@@ -16,7 +16,6 @@ function Signup(){
         var newUser = new User(username, password);
 
         fetchJSON('http://localhost:8080/api/public/signup', 
-        //fetchJSON('http://localhost:8080/login', 
         {method: 'POST', 
         headers: {
             'Content-Type': 'application/json'
@@ -29,7 +28,7 @@ function Signup(){
             console.log(error.responseJSON);
             //console.log(error.responseJSON.message);
             setSubmitError(true);
-            //setErrorMessage(error.responseJSON.message)
+            setErrorMessage(error.responseJSON.message)
         });
     }
 
