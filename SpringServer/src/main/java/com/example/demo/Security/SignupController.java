@@ -1,6 +1,7 @@
 package com.example.demo.Security;
 
 import com.example.demo.DemoApplication;
+import com.example.demo.Greeting.Greeting;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class SignupController {
     private UserRepository userRepo;
 
     @PostMapping("/api/public/signup")
-    public void Signup(@RequestBody ApplicationUser newUser) {
+    public Greeting Signup(@RequestBody ApplicationUser newUser) {
         logger.info("Adding new user with username = " + newUser.getUsername());
         newUser.setEnabled(true);
         
@@ -43,5 +44,9 @@ public class SignupController {
 
         //Save the new user
         userRepo.save(newUser);
+
+        var obj = new Greeting(0, "test");
+
+        return obj;
     }
 }

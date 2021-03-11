@@ -22,16 +22,42 @@ function Signup(){
         },
         body: JSON.stringify(newUser)
         })
-        .then(response => response.JSON())
-        .then(json => console.log(json))
+        .then(response => {
+            console.log("1")
+            return response.text()
+        })
+        .then(json => {
+            console.log("2")
+            console.log(json)
+        })
         .catch(error => {
+            console.log("In Catch")
             console.log(error.responseJSON);
             //console.log(error.responseJSON.message);
             setSubmitError(true);
             setErrorMessage(error.responseJSON.message)
-        });
+        })
+        //.then(console.log('Got here'));
     }
 
+    function testSecured(){
+        var JWT = localStorage.getItem('JWT')
+        fetchJSON('http://localhost:8080/api/secured/greeting', 
+        {method: 'GET', 
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + JWT
+        },
+        })
+        .then(response => response.JSON())
+        .then(json => console.log(json))
+        .catch(error => {
+            console.log()
+            console.log("Error JSON: " + error.responseJSON);
+            //console.log(error.responseJSON.message);
+        })
+        ;
+    }
 
     return(
         <div>
@@ -48,6 +74,7 @@ function Signup(){
             </form>
             <button onClick={testAPI}>Send GET</button>
             <SignupError submitError={submitError} errorMessage={errorMessage}/>
+            <button onClick={testSecured}>Test Secured</button>
         </div>
     );
 }
