@@ -24,7 +24,7 @@ function Signup(){
         })
         .then(response => {
             console.log("1")
-            return response.text()
+            return response.json()
         })
         .then(json => {
             console.log("2")
@@ -49,10 +49,9 @@ function Signup(){
             'Authorization': 'Bearer ' + JWT
         },
         })
-        .then(response => response.JSON())
+        .then(response => response.json())
         .then(json => console.log(json))
         .catch(error => {
-            console.log()
             console.log("Error JSON: " + error.responseJSON);
             //console.log(error.responseJSON.message);
         })

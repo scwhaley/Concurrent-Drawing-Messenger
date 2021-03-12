@@ -1,4 +1,4 @@
-package com.example.demo.Security;
+package com.example.demo.UserInfo;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

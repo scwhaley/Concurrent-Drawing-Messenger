@@ -12,16 +12,13 @@ const fetchJSON = (url, options) => {
                 return response;
             }
             
-            //Not OK status
-            return response.json().then(json => {
-                console.log("Got over here")
-                console.log(response.status)
-                console.log(response)
-                let err = new FetchJSONError();
-                err.response = response;
-                err.responseJSON = json;
-                throw err;
-            });
+            //Not OK Status
+            console.log("Got over here")
+            console.log(response.status)
+            console.log(response)
+            let err = new FetchJSONError();
+            err.response = response;
+            throw err;
         })
     )
 }

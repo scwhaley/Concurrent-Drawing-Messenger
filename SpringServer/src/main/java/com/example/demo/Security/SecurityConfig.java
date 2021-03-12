@@ -1,5 +1,7 @@
 package com.example.demo.Security;
 
+import com.example.demo.UserInfo.UserDetailsServiceImpl;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,14 +28,13 @@ import org.springframework.web.filter.CorsFilter;
     protected void configure(HttpSecurity http) throws Exception{
         //Enable CORS (since Spring is on port 8080 and React is on port 3000) and disable CSRF
         http.cors().and().csrf().disable();
-
+        
         http.authorizeRequests()
             // Public endpoints
             .antMatchers("/api/public/**").permitAll()
             // Private endpoints
             .anyRequest().authenticated()
             .and()
-            .addFilter(new LoginJWTCreationFilter(authenticationManager()))
             .addFilter(new JWTAuthorizationFilter(authenticationManager()))
             //disables SpringSecurity's default session creation
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

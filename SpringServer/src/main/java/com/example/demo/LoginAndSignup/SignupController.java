@@ -1,7 +1,9 @@
-package com.example.demo.Security;
+package com.example.demo.LoginAndSignup;
 
 import com.example.demo.DemoApplication;
 import com.example.demo.Greeting.Greeting;
+import com.example.demo.UserInfo.ApplicationUser;
+import com.example.demo.UserInfo.UserRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

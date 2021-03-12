@@ -1,4 +1,4 @@
-package com.example.demo.Security;
+package com.example.demo.UserInfo;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

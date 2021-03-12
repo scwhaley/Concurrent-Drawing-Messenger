@@ -9,21 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.auth0.jwt.JWT;
 import com.example.demo.DemoApplication;
+import com.example.demo.UserInfo.ApplicationUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.server.ResponseStatusException;
-
 public class LoginJWTCreationFilter extends UsernamePasswordAuthenticationFilter{
 
     private AuthenticationManager authManager;

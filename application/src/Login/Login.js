@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import './Login.css';
-import {authenticate} from "./authenticate";
 import User from "../User"
 import fetchJSON from "../Utils/FetchJSON";
 
@@ -28,7 +27,7 @@ function Login(){
         console.log(JSON.stringify(user));
 
         //Post user credentials to login URL
-        fetchJSON('http://localhost:8080/login',
+        fetchJSON('http://localhost:8080/api/public/login',
                 {method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json'
@@ -59,6 +58,7 @@ function Login(){
                     console.log("Error.responseJSON: " + error.responseJSON);
                 });
 
+        //Prevent page refresh
         event.preventDefault(); 
     }
 
