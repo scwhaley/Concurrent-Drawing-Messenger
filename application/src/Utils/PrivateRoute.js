@@ -1,5 +1,5 @@
 import { Route, Redirect } from "react-router-dom";
-import {checkIfAlreadyLoggedIn} from "../Login/authenticate"
+import checkIfAlreadyLoggedIn from "../Login/authenticate"
 
 function PrivateRoute(props) {
     var isLoggedIn = checkIfAlreadyLoggedIn();

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import User from "../User"
-import fetchJSON from '../Utils/FetchJSON';
+import fetchErr from '../Utils/FetchErr';
 import SignupError from "./SignupError"
 
 function Signup(){
@@ -15,7 +15,7 @@ function Signup(){
         setSubmitError(false);
         var newUser = new User(username, password);
 
-        fetchJSON('http://localhost:8080/api/public/signup', 
+        fetchErr('http://localhost:8080/api/public/signup', 
         {method: 'POST', 
         headers: {
             'Content-Type': 'application/json'
@@ -23,26 +23,24 @@ function Signup(){
         body: JSON.stringify(newUser)
         })
         .then(response => {
-            console.log("1")
             return response.json()
         })
-        .then(json => {
-            console.log("2")
-            console.log(json)
+        .then(responseBody => {
+            console.log("Message is: \n\n" + responseBody.message)
         })
         .catch(error => {
             console.log("In Catch")
-            console.log(error.responseJSON);
-            //console.log(error.responseJSON.message);
             setSubmitError(true);
-            setErrorMessage(error.responseJSON.message)
+            console.log(error.response)
+            error.response.json().then(responseBody => {
+                console.log("Message is: " + responseBody.message)
+            })           
         })
-        //.then(console.log('Got here'));
     }
 
     function testSecured(){
         var JWT = localStorage.getItem('JWT')
-        fetchJSON('http://localhost:8080/api/secured/greeting', 
+        fetchErr('http://localhost:8080/api/secured/greeting', 
         {method: 'GET', 
         headers: {
             'Content-Type': 'application/json',
@@ -76,10 +74,6 @@ function Signup(){
             <button onClick={testSecured}>Test Secured</button>
         </div>
     );
-}
-
-function fetchWithErrorHandling(){
-
 }
 
 export default Signup;

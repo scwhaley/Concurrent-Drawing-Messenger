@@ -1,6 +1,6 @@
-import FetchJSONError from './FetchJSONError'
+import FetchErrorWrapper from './FetchErrorWrapper'
 
-const fetchJSON = (url, options) => {
+const fetchErr = (url, options) => {
     //Returns the result of the fetch
     // In case of OK status, returns the response
     // In case of not OK status, throws an error whose message field is the body as JSON
@@ -13,14 +13,11 @@ const fetchJSON = (url, options) => {
             }
             
             //Not OK Status
-            console.log("Got over here")
-            console.log(response.status)
-            console.log(response)
-            let err = new FetchJSONError();
+            let err = new FetchErrorWrapper();
             err.response = response;
             throw err;
         })
     )
 }
 
-export default fetchJSON;
+export default fetchErr;

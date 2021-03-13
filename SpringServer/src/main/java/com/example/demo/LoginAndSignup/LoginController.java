@@ -31,21 +31,18 @@ public class LoginController {
 
     @PostMapping("/api/public/login")
     public ResponseEntity<String> Login(@RequestBody ApplicationUser userCreds){
-        logger.info("Proivded username is " + userCreds.getUsername());
-        logger.info("Proivded PW is " + userCreds.getPassword());
+
+        logger.info("Login request made with username: " + userCreds.getUsername() + " and password: " + userCreds.getPassword())
+        ;
         //Find user with the provided username
         ApplicationUser user = userRepository.findByUsername(userCreds.getUsername());
 
+        //Verify that username exists
         if(user == null){
             logger.info("No user found with the username: " + userCreds.getUsername());
             return new ResponseEntity<String>("Invalid Credentials", null, HttpStatus.UNAUTHORIZED);
         }
 
-        if(!user.isEnabled()){
-            logger.info(userCreds.getUsername() + " is not enabled.");
-            return new ResponseEntity<String>("This account is disabled.", null, HttpStatus.UNAUTHORIZED);
-        }
-        
         //Verify that the passwords match
         boolean passwordMatch = user.getPassword() == encoder.encode(userCreds.getPassword());
 
@@ -54,8 +51,16 @@ public class LoginController {
             return new ResponseEntity<String>("Invalid Credentials", null, HttpStatus.UNAUTHORIZED);
         }
 
+        //Verify the account is enables
+        if(!user.isEnabled()){
+            logger.info(userCreds.getUsername() + " is not enabled.");
+            return new ResponseEntity<String>("This account is disabled.", null, HttpStatus.UNAUTHORIZED);
+        }
+                
         //Successful login
+        logger.info("Sucessful login");
         String token = authService.createJWT(user);
+        logger.info("Created and sent JWT on Authorization header");
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Authorization", token);

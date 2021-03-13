@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import './Login.css';
 import User from "../User"
-import fetchJSON from "../Utils/FetchJSON";
+import fetchErr from '../Utils/FetchErr';
 
 function Login(){
     var [username, setUsername] = useState("");
@@ -27,7 +27,7 @@ function Login(){
         console.log(JSON.stringify(user));
 
         //Post user credentials to login URL
-        fetchJSON('http://localhost:8080/api/public/login',
+        fetchErr('http://localhost:8080/api/public/login',
                 {method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json'

@@ -4,11 +4,15 @@ import com.example.demo.DemoApplication;
 import com.example.demo.Greeting.Greeting;
 import com.example.demo.UserInfo.ApplicationUser;
 import com.example.demo.UserInfo.UserRepository;
+import com.example.demo.Utils.BasicMessage;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,28 +31,35 @@ public class SignupController {
     private UserRepository userRepo;
 
     @PostMapping("/api/public/signup")
-    public Greeting Signup(@RequestBody ApplicationUser newUser) {
-        logger.info("Adding new user with username = " + newUser.getUsername());
+    public ResponseEntity<String> Signup(@RequestBody ApplicationUser newUser) throws JsonProcessingException {
+
+        logger.info("Attempting account creation with username = " + newUser.getUsername() + " and password: " + newUser.getPassword());
+
         newUser.setEnabled(true);
-        
         
         ApplicationUser existingUser = userRepo.findByUsername(newUser.getUsername());
 
-        //If username already exists
-        if ( existingUser != null){
+        //Check if username already exists
+        if (existingUser != null){
             logger.info("User already exists with the username: " + existingUser.getUsername());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
+
+             
+            BasicMessage responseBody = new BasicMessage("Username already exists");
+            String responseBodyAsJson = new ObjectMapper().writeValueAsString(responseBody);
+
+            return new ResponseEntity<String>( responseBodyAsJson, null, HttpStatus.BAD_REQUEST);
         }
 
-        //If username is valid
         //Salt and hash the plaintext password
         newUser.setPassword(encoder.encode(newUser.getPassword()));
 
-        //Save the new user
+        //Persist the new user to the DB
         userRepo.save(newUser);
+        
+        logger.info("Created account for username: " + newUser.getUsername());
 
-        var obj = new Greeting(0, "test");
-
-        return obj;
+        BasicMessage responseBody = new BasicMessage("Account successfully created.");
+        String responseBodyAsJson = new ObjectMapper().writeValueAsString(responseBody);
+        return new ResponseEntity<String>(responseBodyAsJson, null, HttpStatus.OK);
     }
 }
