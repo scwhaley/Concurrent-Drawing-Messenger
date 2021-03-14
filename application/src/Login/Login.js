@@ -35,7 +35,6 @@ function Login(){
                 body: JSON.stringify(user)
                 })
                 .then(response => {
-                    console.log(response);
                     return response.headers;
                 })
                 //If successful, then get the JWT out of the Authorization header and store in local storage
@@ -49,13 +48,15 @@ function Login(){
                     console.log(successful)
                     if(successful == true){
                         console.log("Going back...")
-                        history.goBack()
+                        history.push("/main ")
                     };
                 })
                 //If unsuccessful. log the error
                 .catch(error => {
-                    console.log("Error.response: " + error.response);
-                    console.log("Error.responseJSON: " + error.responseJSON);
+                    error.response.json()
+                    .then(json => {
+                        console.log(json)
+                    })
                 });
 
         //Prevent page refresh

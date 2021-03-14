@@ -10,22 +10,9 @@ import DrawingCanvas from './DrawingCanvas/DrawingCanvas.js';
 import Welcome from './Welcome/Welcome'
 import PrivateRoute from './Utils/PrivateRoute'
 import Signup from './Signup/Signup';
+import canvasWebSocketContext from './AppContexts/canvasWebSocketContext'
 
 function App(){
-
-  // var sidebarToggleClick = () => {
-  //   this.setState({sidebarIsCollapsed: !this.state.sidebarIsCollapsed});
-    
-  //   if(this.state.sidebarIsCollapsed === true){
-  //       document.getElementById("SidebarContainer").style.left = "-250px";
-  //       document.getElementById("MainContent").style.marginLeft = "60px";
-  //   }
-  //   else{
-  //       document.getElementById("SidebarContainer").style.left = "00px";
-  //       document.getElementById("MainContent").style.marginLeft = "310px";
-  //   }
-  // }
-
   return(
     <div>
       <Switch>
@@ -34,11 +21,10 @@ function App(){
           <Welcome/>
         </Route>
 
-        <PrivateRoute path="/main" component={Sidebar}>
-          {/* <Sidebar sidebarToggleClick={sidebarToggleClick}/>*/}
+        <Route path="/main">
           <Sidebar/>
           <DrawingCanvas/>
-        </PrivateRoute>
+        </Route>
 
         <Route path="/login">
           <Login />

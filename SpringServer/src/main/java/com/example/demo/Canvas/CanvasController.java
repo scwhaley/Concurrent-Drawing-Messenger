@@ -26,15 +26,16 @@ public class CanvasController {
     @MessageMapping("/message/{room}")
     public void processMessageFromClient(@Payload String message, Principal principal, @DestinationVariable String room){
         
-        //logger.info(("Recieved message from " + "app/message/" + room));
+        logger.info(("Recieved message from " + "app/message/" + room));
         String name = message;
         String dest = "/topic/test/" + room;
-        //logger.info("Sending response to " + dest);
+        logger.info("Sending response to " + dest);
         this.template.convertAndSend(dest, name);
     }
 
     @SubscribeMapping("/test/{room}")
     public void processSubscriptionFromClient(@DestinationVariable String room, Principal principal){
+        
         logger.info("Recieved subscription");
 
         Message syncMessage = new Message();

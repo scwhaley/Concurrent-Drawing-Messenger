@@ -1,8 +1,54 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './DrawingCanvas.css';
 import { Client } from '@stomp/stompjs';
-import Line from './Line';
-import Message from './Message';
+import Line from './Line'
+import Message from './Message'
+
+function DrawingCanvasFunctional(){
+    var [stompClient, setStompClient] = useState();
+    var [mouseIsDown, setMouseDown] = useState(false);
+    var [canvas, setCanvas] = useState();
+    var [canvasContext, setCanvasContext] = useState();
+    var [canvasLastX, setCanvasLastX] = useState(0);
+    var [canvasLastY, setCanvasLastY] = useState(0);
+
+    //STOMP Client setup
+    var stompConfig = {
+        connectHeaders: {
+            login: "guest",
+            passcode: "guest"
+        },
+        brokerURL: "ws://localhost:8080/greeting/websocket",
+        reconnectDelay: 200,
+        onConnect: (frame) => {
+            console.log("Connected");
+            const subscription = this.state.stompClient.subscribe("/topic/test/room1", this.handleIncomingMessages);
+        }
+    };
+
+    var stompClient = new Client(stompConfig);
+
+    // Run when canvas or StompClient changes
+    useEffect(() => {
+        // Canvas Setup
+        var canvas = document.getElementById('CanvasID');
+        var ctx = canvas.getContext('2d');
+
+        //Must add event listeners this way. Adding them directly to the canvas HTML element
+        // does connect the mouse event object to the function.
+        canvas.addEventListener("mousedown", this.canvasOnMouseDown, false);
+        canvas.addEventListener("mouseup", this.canvasOnMouseUp, false);
+        canvas.addEventListener("mousemove", this.cavasOnMouseMove, false);
+
+        this.state.stompClient.activate();
+
+        this.setState({
+            canvasContext: ctx,
+            canvas: canvas
+        });
+    },[canvas, stompClient])
+    
+}
 
 class DrawingCanvas extends Component{
     constructor(){

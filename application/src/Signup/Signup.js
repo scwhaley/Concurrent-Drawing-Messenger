@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import User from "../User"
 import fetchErr from '../Utils/FetchErr';
 import SignupError from "./SignupError"
@@ -10,6 +11,8 @@ function Signup(){
     var [confirmPassword, setConfirmPassword] = useState('');
     var [submitError, setSubmitError] = useState(false);
     var [errorMessage, setErrorMessage] = useState('');
+
+    let history = useHistory();
 
     function testAPI(){
         setSubmitError(false);
@@ -28,6 +31,12 @@ function Signup(){
         .then(responseBody => {
             console.log("Message is: \n\n" + responseBody.message)
         })
+        .then(() => {
+            //can't just put history.push('/login') because the first argument of setTimeout
+            //expects a callback. If we were to just pass in history.push('/login'), then it
+            //would execute history.push then provide the return (undefined) as the argument to setTimeout
+            setTimeout(() => history.push('/login'), 1000);
+        })
         .catch(error => {
             console.log("In Catch")
             setSubmitError(true);
@@ -37,6 +46,7 @@ function Signup(){
             })           
         })
     }
+
 
     function testSecured(){
         var JWT = localStorage.getItem('JWT')

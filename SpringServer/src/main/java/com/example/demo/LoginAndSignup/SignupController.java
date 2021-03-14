@@ -1,12 +1,10 @@
 package com.example.demo.LoginAndSignup;
 
 import com.example.demo.DemoApplication;
-import com.example.demo.Greeting.Greeting;
 import com.example.demo.UserInfo.ApplicationUser;
 import com.example.demo.UserInfo.UserRepository;
 import com.example.demo.Utils.BasicMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class SignupController {
@@ -42,12 +39,7 @@ public class SignupController {
         //Check if username already exists
         if (existingUser != null){
             logger.info("User already exists with the username: " + existingUser.getUsername());
-
-             
-            BasicMessage responseBody = new BasicMessage("Username already exists");
-            String responseBodyAsJson = new ObjectMapper().writeValueAsString(responseBody);
-
-            return new ResponseEntity<String>( responseBodyAsJson, null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(BasicMessage.basicMessageAsJSONString("Username already exists"), null, HttpStatus.BAD_REQUEST);    
         }
 
         //Salt and hash the plaintext password
@@ -55,11 +47,8 @@ public class SignupController {
 
         //Persist the new user to the DB
         userRepo.save(newUser);
-        
         logger.info("Created account for username: " + newUser.getUsername());
 
-        BasicMessage responseBody = new BasicMessage("Account successfully created.");
-        String responseBodyAsJson = new ObjectMapper().writeValueAsString(responseBody);
-        return new ResponseEntity<String>(responseBodyAsJson, null, HttpStatus.OK);
+        return new ResponseEntity<String>(BasicMessage.basicMessageAsJSONString("Account successfully created."), null, HttpStatus.OK);
     }
 }

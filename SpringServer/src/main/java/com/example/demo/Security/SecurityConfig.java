@@ -32,6 +32,8 @@ import org.springframework.web.filter.CorsFilter;
         http.authorizeRequests()
             // Public endpoints
             .antMatchers("/api/public/**").permitAll()
+            .antMatchers("/topic/**").permitAll() 
+            .antMatchers("/greeting/**").permitAll()
             // Private endpoints
             .anyRequest().authenticated()
             .and()
