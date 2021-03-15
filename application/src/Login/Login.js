@@ -46,7 +46,7 @@ function Login(){
                 })
                 .then(successful => {
                     console.log(successful)
-                    if(successful == true){
+                    if(successful === true){
                         console.log("Going back...")
                         history.push("/main ")
                     };

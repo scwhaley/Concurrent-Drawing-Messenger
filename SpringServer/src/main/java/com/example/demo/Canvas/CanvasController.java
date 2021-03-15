@@ -26,7 +26,7 @@ public class CanvasController {
     @MessageMapping("/message/{room}")
     public void processMessageFromClient(@Payload String message, Principal principal, @DestinationVariable String room){
         
-        logger.info(("Recieved message from " + "app/message/" + room));
+        logger.info(("Recieved message to app/message/" + room + ": " + message));
         String name = message;
         String dest = "/topic/test/" + room;
         logger.info("Sending response to " + dest);
@@ -43,6 +43,8 @@ public class CanvasController {
         syncMessage.setContent("");
         
         String dest = "/topic/test/" + room;
+
+        logger.info("Sending Sync message");
 
         this.template.convertAndSend(dest, syncMessage);
     }
