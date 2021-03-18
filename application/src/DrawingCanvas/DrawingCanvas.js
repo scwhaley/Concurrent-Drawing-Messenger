@@ -21,6 +21,9 @@ class DrawingCanvas extends Component{
             onConnect: (frame) => {
                 console.log("Connected");
                 const subscription = this.state.stompClient.subscribe("/topic/test/room1", this.handleIncomingMessages);
+                this.setState({
+                    subscription: subscription
+                })
             }
         };
 
@@ -32,7 +35,8 @@ class DrawingCanvas extends Component{
             canvas: null,
             canvasContext: null,
             canvasLastX: 0,
-            canvasLastY: 0
+            canvasLastY: 0,
+            subscription: null
         };
     }
 
@@ -42,7 +46,7 @@ class DrawingCanvas extends Component{
         var ctx = canvas.getContext('2d');
 
         //Must add event listeners this way. Adding them directly to the canvas HTML element
-        // does connect the mouse event object to the function.
+        //doesn't connect the mouse event object to the function.
         canvas.addEventListener("mousedown", this.canvasOnMouseDown, false);
         canvas.addEventListener("mouseup", this.canvasOnMouseUp, false);
         canvas.addEventListener("mousemove", this.cavasOnMouseMove, false);
@@ -53,6 +57,11 @@ class DrawingCanvas extends Component{
             canvasContext: ctx,
             canvas: canvas
         });
+    }
+
+    componentWillUnmount = () => {
+        console.log('unscubscribing');
+        this.state.subscription.unsubscribe();
     }
 
     handleIncomingMessages = (message) => {
@@ -68,10 +77,10 @@ class DrawingCanvas extends Component{
                 this.drawLine(this.state.canvasContext, content.x1, content.y1, content.x2, content.y2);
                 break;
             case "Refresh":
-                this.drawImageToCanvas(content);
+                this.drawImageToCanvas(this.state.canvasContext, content);
                 break;
             case "Sync":
-                this.handleSync();
+                this.handleSync(this.state.canvas);
                 break;
             default:
                 break;
@@ -79,17 +88,17 @@ class DrawingCanvas extends Component{
     }
 
     // Uses a dataURL to draw an image to the canvas
-    drawImageToCanvas = (imgDataURL) => {
+    drawImageToCanvas = (context, imgDataURL) => {
         var img = new Image();
         img.onload = () => {
-            this.state.canvasContext.drawImage(img,0,0);
+            context.drawImage(img,0,0);
         };
         img.src = imgDataURL;
     }
 
     // Sends a message containing an dataURL representing the current state of the canvas
-    handleSync = () => {
-        var canvasDataURL = this.state.canvas.toDataURL();
+    handleSync = (canvas) => {
+        var canvasDataURL = canvas.toDataURL();
         var message = new Message("Refresh", canvasDataURL);
         this.state.stompClient.publish({destination: "/app/message/room1", body: JSON.stringify(message)});
     }

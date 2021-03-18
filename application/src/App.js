@@ -12,6 +12,7 @@ import PrivateRoute from './Utils/PrivateRoute'
 import Signup from './Signup/Signup';
 import canvasWebSocketContext from './AppContexts/canvasWebSocketContext'
 import DrawingCanvasFunctional from './DrawingCanvas/DrawingCanvasFuntional';
+import STOMPtest from './DrawingCanvas/STOMPtest';
 
 function App(){
   return(
@@ -24,7 +25,7 @@ function App(){
 
         <Route path="/main">
           <Sidebar/>
-          <DrawingCanvasFunctional/>
+          <DrawingCanvas/>
         </Route>
 
         <Route path="/login">

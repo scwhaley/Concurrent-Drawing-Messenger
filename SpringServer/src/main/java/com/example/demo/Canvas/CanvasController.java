@@ -33,6 +33,8 @@ public class CanvasController {
         this.template.convertAndSend(dest, name);
     }
 
+    
+
     @SubscribeMapping("/test/{room}")
     public void processSubscriptionFromClient(@DestinationVariable String room, Principal principal){
         
