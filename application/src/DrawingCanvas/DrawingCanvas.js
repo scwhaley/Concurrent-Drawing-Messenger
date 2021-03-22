@@ -77,7 +77,7 @@ class DrawingCanvas extends Component{
                 this.drawLine(this.state.canvasContext, content.x1, content.y1, content.x2, content.y2);
                 break;
             case "Refresh":
-                this.drawImageToCanvas(this.state.canvasContext, content);
+                this.drawImageToCanvas(this.state.canvas, this.state.canvasContext, content);
                 break;
             case "Sync":
                 this.handleSync(this.state.canvas);
@@ -87,10 +87,12 @@ class DrawingCanvas extends Component{
         }
     }
 
-    // Uses a dataURL to draw an image to the canvas
-    drawImageToCanvas = (context, imgDataURL) => {
+    //Uses a dataURL to draw an image to the canvas
+    //Make sure to clear the canvas first to prevent the images from stacking and causing "darkening and blur"
+    drawImageToCanvas = (canvas, context, imgDataURL) => {
         var img = new Image();
-        img.onload = () => {
+        img.onload = () => {    
+            context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(img,0,0);
         };
         img.src = imgDataURL;
@@ -100,7 +102,7 @@ class DrawingCanvas extends Component{
     handleSync = (canvas) => {
         var canvasDataURL = canvas.toDataURL();
         var message = new Message("Refresh", canvasDataURL);
-        this.state.stompClient.publish({destination: "/app/message/room1", body: JSON.stringify(message)});
+        this.state.stompClient.publish({destination: "/topic/test/room1", body: JSON.stringify(message)});
     }
 
     // Drawing functions
@@ -126,7 +128,7 @@ class DrawingCanvas extends Component{
         if(this.state.mouseIsDown){
             var line = new Line(this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
             var message = new Message("Draw", line);
-            this.state.stompClient.publish({destination: "/app/message/room1", body: JSON.stringify(message)});
+            this.state.stompClient.publish({destination: "/topic/test/room1", body: JSON.stringify(message)});
             this.setState({
                 canvasLastX: e.offsetX,
                 canvasLastY: e.offsetY

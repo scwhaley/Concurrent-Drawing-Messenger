@@ -10,13 +10,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.demo.DemoApplication;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+    
+    private static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
     
     public JWTAuthorizationFilter(AuthenticationManager authManager){
         super(authManager);
@@ -51,15 +57,20 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
         //Verifies the supplied token and extract the user from the subject (sub) field.
         // Note we must strip off the "Bearer " prefix.
-        String user = JWT.require(Algorithm.HMAC512("SecretKeyToGenerateJWTs"))
-                        .build()
-                        .verify(token.replace("Bearer ", ""))
-                        .getSubject();
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512("SecretKeyToGenerateJWTs"))
+                                    .build()
+                                    .verify(token.replace("Bearer ", ""));
+
+        String user = decodedJWT.getSubject();
+
 
         if (user == null){
             return null;
         }
 
+        logger.info("Successful JWT validation");
+        logger.info("user_id = " + decodedJWT.getClaim("user_id"));
+        
         //Create the authentication token with the supplied user.
         // Note that there are no credentials or roles at this point since they are not included
         // in the JWT.

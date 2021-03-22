@@ -19,10 +19,12 @@ public class AuthenticationService {
 
     public String createJWT(ApplicationUser user){
         logger.info("Creating JWT");
+        
 
         // User the Auth0 library to create a JWT
         String token = JWT.create().withSubject(user.getUsername())
                                     .withExpiresAt( new Date(System.currentTimeMillis()+(long)300000))
+                                    .withClaim("user_id", user.getUser_id())
                                     .sign(HMAC512("SecretKeyToGenerateJWTs"));
 
         logger.info("Token is :" + token);

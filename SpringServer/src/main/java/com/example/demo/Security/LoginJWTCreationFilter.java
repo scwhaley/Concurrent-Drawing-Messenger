@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.auth0.jwt.JWT;
 import com.example.demo.DemoApplication;
 import com.example.demo.UserInfo.ApplicationUser;
+import com.example.demo.UserInfo.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
@@ -22,11 +23,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 public class LoginJWTCreationFilter extends UsernamePasswordAuthenticationFilter{
 
     private AuthenticationManager authManager;
 
     private static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
+
+    private UserRepository userRepo;
 
     public LoginJWTCreationFilter(AuthenticationManager authManager){
         this.authManager = authManager;
@@ -56,10 +60,13 @@ public class LoginJWTCreationFilter extends UsernamePasswordAuthenticationFilter
                                             FilterChain chain,
                                             Authentication auth){
 
+        ApplicationUser appUser = userRepo.findByUsername(((User) auth.getPrincipal()).getUsername());
+
         logger.info("Succesful authentication. Creating JWT");
         // User the Auth0 library to create a JWT
         String token = JWT.create().withSubject( ((User) auth.getPrincipal()).getUsername())
                                     .withExpiresAt( new Date(System.currentTimeMillis()+(long)300000))
+                                    .withClaim("user_id", appUser.getUser_id())
                                     .sign(HMAC512("SecretKeyToGenerateJWTs"));
 
         logger.info("Token is :" + token);
