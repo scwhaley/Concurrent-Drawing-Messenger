@@ -30,5 +30,4 @@ public class AuthenticationService {
         logger.info("Token is :" + token);
         return token;
     }
-
 }

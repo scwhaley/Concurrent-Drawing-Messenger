@@ -43,6 +43,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
         UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
 
+        
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
@@ -69,12 +71,14 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         logger.info("Successful JWT validation");
-        logger.info("user_id = " + decodedJWT.getClaim("user_id"));
         
         //Create the authentication token with the supplied user.
         // Note that there are no credentials or roles at this point since they are not included
         // in the JWT.
-        return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        authentication.setDetails(decodedJWT.getClaims());
+
+        return authentication;
 
     }
 }

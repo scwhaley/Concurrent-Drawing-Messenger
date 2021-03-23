@@ -3,6 +3,7 @@ import './DrawingCanvas.css';
 import { Client } from '@stomp/stompjs';
 import Line from './Line';
 import Message from './Message';
+import fetchErr from '../Utils/FetchErr'
 
 class DrawingCanvas extends Component{
     constructor(){
@@ -147,11 +148,27 @@ class DrawingCanvas extends Component{
         context.closePath();
     };
 
+    testSecured = () => {
+        fetchErr('http://localhost:8080/api/secured/subscriptions',
+                {method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization':  'Bearer ' + localStorage.getItem('JWT')
+                }
+                })
+        .then(response => response.json())
+        .then(json => console.log(json))
+        .catch(err => {
+            err.response.json().then(json => console.log(json));
+        });
+    }   
+
     render(){
         return(
             <div>
                 <canvas id="CanvasID" />
                 <h1>dfgdfg</h1>
+                <button onClick={this.testSecured}>Test secured</button>
             </div>
         );
     };
