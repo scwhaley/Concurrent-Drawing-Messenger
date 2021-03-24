@@ -157,7 +157,11 @@ class DrawingCanvas extends Component{
                 }
                 })
         .then(response => response.json())
-        .then(json => console.log(json))
+        .then(json => {
+            json.forEach((canvas, index) => {
+                console.log("At index " + index + ": " + canvas.name)
+            });
+        })
         .catch(err => {
             err.response.json().then(json => console.log(json));
         });
