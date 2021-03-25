@@ -8,7 +8,33 @@ import fetchErr from '../Utils/FetchErr'
 class DrawingCanvas extends Component{
     constructor(){
         super();
+        this.subscribe();
+    }
 
+    componentDidMount = () => {
+        // Canvas Setup
+        var canvas = document.getElementById('CanvasID');
+        var ctx = canvas.getContext('2d');
+
+        //Must add event listeners this way. Adding them directly to the canvas HTML element
+        //doesn't connect the mouse event object to the function.
+        canvas.addEventListener("mousedown", this.canvasOnMouseDown, false);
+        canvas.addEventListener("mouseup", this.canvasOnMouseUp, false);
+        canvas.addEventListener("mousemove", this.cavasOnMouseMove, false);
+
+        this.state.stompClient.activate();
+
+        this.setState({
+            canvasContext: ctx,
+            canvas: canvas
+        });
+    }
+
+    componentWillUnmount = () => {
+        this.unsubscribe();
+    }
+
+    subscribe = () => {
         //STOMP Client setup
         var stompClient;
 
@@ -41,26 +67,7 @@ class DrawingCanvas extends Component{
         };
     }
 
-    componentDidMount = () => {
-        // Canvas Setup
-        var canvas = document.getElementById('CanvasID');
-        var ctx = canvas.getContext('2d');
-
-        //Must add event listeners this way. Adding them directly to the canvas HTML element
-        //doesn't connect the mouse event object to the function.
-        canvas.addEventListener("mousedown", this.canvasOnMouseDown, false);
-        canvas.addEventListener("mouseup", this.canvasOnMouseUp, false);
-        canvas.addEventListener("mousemove", this.cavasOnMouseMove, false);
-
-        this.state.stompClient.activate();
-
-        this.setState({
-            canvasContext: ctx,
-            canvas: canvas
-        });
-    }
-
-    componentWillUnmount = () => {
+    unsubscribe = () => {
         console.log('unscubscribing');
         this.state.subscription.unsubscribe();
     }

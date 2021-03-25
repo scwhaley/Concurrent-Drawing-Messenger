@@ -14,6 +14,7 @@ import canvasWebSocketContext from './AppContexts/canvasWebSocketContext'
 import DrawingCanvasFunctional from './DrawingCanvas/DrawingCanvasFuntional';
 import STOMPtest from './DrawingCanvas/STOMPtest';
 import CanvasSelector from './DrawingCanvas/CanvasSelector';
+import MainArea from './MainArea/MainArea';
 
 function App(){
   return(
@@ -25,11 +26,7 @@ function App(){
         </Route>
 
         <Route path="/main">
-          {/*
-          <Sidebar/>
-          */}
-          <DrawingCanvas/>
-          <CanvasSelector/>
+          <MainArea/>
         </Route>
 
         <Route path="/login">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import fetchErr from '../Utils/FetchErr';
 
-function CanvasSelector(){
+function CanvasSelector(props){
     var [canvases, setCanvases] = useState([]);
 
     useEffect(() => {
@@ -24,9 +24,10 @@ function CanvasSelector(){
         });
     }, [])
 
+
     var canvasListToListItems = (canvasList) => {
         var elementList = canvasList.map((canvas) => 
-            <li>{canvas.name}</li>
+            <li onClick={() => props.setSelectedCanvas(canvas.name)}>{canvas.name}</li>
         );
         console.log(elementList)
         return elementList;

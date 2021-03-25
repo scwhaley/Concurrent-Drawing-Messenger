@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import './Login.css';
 import User from "../User"
 import fetchErr from '../Utils/FetchErr';
@@ -7,6 +7,7 @@ import fetchErr from '../Utils/FetchErr';
 function Login(){
     var [username, setUsername] = useState("");
     var [password, setPassword] = useState("");
+    var [successfulLogin, setSuccessfulLogin] = useState(false);
 
     //Get browser history
     let history = useHistory();
@@ -48,7 +49,7 @@ function Login(){
                     console.log(successful)
                     if(successful === true){
                         console.log("Going back...")
-                        history.push("/main ")
+                        setSuccessfulLogin(true);
                     };
                 })
                 //If unsuccessful. log the error
@@ -61,6 +62,10 @@ function Login(){
 
         //Prevent page refresh
         event.preventDefault(); 
+    }
+
+    if(successfulLogin){
+        return <Redirect push to="/main"/>
     }
 
 
