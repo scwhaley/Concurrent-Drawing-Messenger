@@ -9,6 +9,9 @@ class DrawingCanvas extends Component{
     constructor(){
         super();
         this.subscribe();
+        this.setState({
+            canvasIsPopulated: false
+        })
     }
 
     componentDidMount = () => {
@@ -72,7 +75,7 @@ class DrawingCanvas extends Component{
     }
 
     unsubscribe = () => {
-        console.log('unscubscribing');
+        console.log('unsubscribing');
         this.state.subscription.unsubscribe();
     }
 
@@ -87,14 +90,21 @@ class DrawingCanvas extends Component{
         switch(payload.type) {
             case "Draw":
                 this.drawLine(this.state.canvasContext, content.x1, content.y1, content.x2, content.y2);
+                if(!this.state.canvasIsPopulated){
+                    this.setState({canvasIsPopulated: true});
+                }
                 break;
             case "Refresh":
-                console.log('Recieved Refresh Message');
+                console.log('Handling Refresh Message');
                 this.drawImageToCanvas(this.state.canvas, this.state.canvasContext, content);
+                if(!this.state.canvasIsPopulated){
+                    this.setState({canvasIsPopulated: true});
+                }
                 break;
             case "Sync":
-                console.log('Recieved Sync Message');
-                this.handleSync(this.state.canvas);
+                if(this.state.canvasIsPopulated){
+                    this.handleSync(this.state.canvas);
+                }
                 break;
             default:
                 break;
