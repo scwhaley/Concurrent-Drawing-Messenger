@@ -47,7 +47,11 @@ class DrawingCanvas extends Component{
             reconnectDelay: 200,
             onConnect: (frame) => {
                 console.log("Connected");
-                const subscription = this.state.stompClient.subscribe("/topic/test/room1", this.handleIncomingMessages);
+                //This subscription is for listening to draw commands from all users subsrived to the canvas
+                const subscription = this.state.stompClient.subscribe("/topic/message/room1", this.handleIncomingMessages);
+                //This message is only to send a one-time request to synchronize the canvases.
+                var syncMessage = new Message("Sync", "");
+                this.state.stompClient.publish({destination: "/topic/message/room1", body: JSON.stringify(syncMessage)})
                 this.setState({
                     subscription: subscription
                 })
@@ -73,7 +77,7 @@ class DrawingCanvas extends Component{
     }
 
     handleIncomingMessages = (message) => {
-        console.log(message);
+        console.log('Recieved message: ' + message);
         
         // Parse the message
         const payload = JSON.parse(message.body);
@@ -85,9 +89,11 @@ class DrawingCanvas extends Component{
                 this.drawLine(this.state.canvasContext, content.x1, content.y1, content.x2, content.y2);
                 break;
             case "Refresh":
+                console.log('Recieved Refresh Message');
                 this.drawImageToCanvas(this.state.canvas, this.state.canvasContext, content);
                 break;
             case "Sync":
+                console.log('Recieved Sync Message');
                 this.handleSync(this.state.canvas);
                 break;
             default:
@@ -108,9 +114,10 @@ class DrawingCanvas extends Component{
 
     // Sends a message containing an dataURL representing the current state of the canvas
     handleSync = (canvas) => {
+        
         var canvasDataURL = canvas.toDataURL();
         var message = new Message("Refresh", canvasDataURL);
-        this.state.stompClient.publish({destination: "/topic/test/room1", body: JSON.stringify(message)});
+        this.state.stompClient.publish({destination: "/topic/message/room1", body: JSON.stringify(message)});
     }
 
     // Drawing functions
@@ -136,7 +143,7 @@ class DrawingCanvas extends Component{
         if(this.state.mouseIsDown){
             var line = new Line(this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
             var message = new Message("Draw", line);
-            this.state.stompClient.publish({destination: "/topic/test/room1", body: JSON.stringify(message)});
+            this.state.stompClient.publish({destination: "/topic/message/room1", body: JSON.stringify(message)});
             this.setState({
                 canvasLastX: e.offsetX,
                 canvasLastY: e.offsetY

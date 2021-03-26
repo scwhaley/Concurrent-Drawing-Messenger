@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { Redirect } from "react-router-dom";
 import fetchErr from '../Utils/FetchErr';
 
 function CanvasSelector(props){
+
     var [canvases, setCanvases] = useState([]);
 
     useEffect(() => {
@@ -25,6 +27,7 @@ function CanvasSelector(props){
     }, [])
 
 
+
     var canvasListToListItems = (canvasList) => {
         var elementList = canvasList.map((canvas) => 
             <li onClick={() => props.setSelectedCanvas(canvas.name)}>{canvas.name}</li>
@@ -33,7 +36,10 @@ function CanvasSelector(props){
         return elementList;
     }
 
-
+    if(props.selectedCanvas !== ''){
+        return <Redirect push to='/main/canvas'/>
+    }
+    
     return(
         <div className="loginPage">
             <ul>

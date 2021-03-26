@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { Redirect, useHistory } from 'react-router-dom';
-import fetchErr from '../Utils/FetchErr';
 import { Switch, Route } from "react-router-dom";
 import CanvasSelector from '../DrawingCanvas/CanvasSelector';
 import DrawingCanvas from '../DrawingCanvas/DrawingCanvas.js';
@@ -10,8 +8,7 @@ function MainArea(){
     var [selectedCanvas, setSelectedCanvas] = useState('');
 
     if(selectedCanvas !== ''){
-        console.log("selectedCanvas !== ''");
-        <Redirect push to='/main/canvas'/>
+        console.log("selectedCanvas !== ''. it equals: " + selectedCanvas);
     }
     return(
         <div className="mainArea">
@@ -19,7 +16,7 @@ function MainArea(){
             <Switch>
 
                 <Route exact path="/main">
-                    <CanvasSelector setSelectedCanvas={setSelectedCanvas}/>
+                    <CanvasSelector setSelectedCanvas={setSelectedCanvas} selectedCanvas={selectedCanvas}/>
                 </Route>
 
                 <Route path="/main/canvas">
