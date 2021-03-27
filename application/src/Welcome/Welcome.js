@@ -13,6 +13,8 @@ function Welcome(){
                 <Link to="/login">Login</Link>
                 <p>or</p>
                 <Link to="/signup">Signup</Link>
+                <p>or</p>
+                <Link to="/test">Test</Link>
             </div>
         );
     }

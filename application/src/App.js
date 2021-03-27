@@ -36,6 +36,10 @@ function App(){
         <Route path="/signup">
           <Signup/>
         </Route>
+
+        <PrivateRoute path="/test" component={<h1>Succesful</h1>}>
+          
+        </PrivateRoute>
         
       </Switch>
     </div>
