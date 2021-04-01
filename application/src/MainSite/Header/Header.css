@@ -1,0 +1,11 @@
+.headerContainer {
+    color: azure;
+}
+
+.logo {
+    justify-self: left;
+}
+
+.websiteName {
+    justify-self: center;
+}

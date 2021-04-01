@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from "react-router-dom";
-import fetchErr from '../Utils/FetchErr';
+import fetchErr from '../../../Utils/FetchErr';
+import './CanvasSelector.css'
 
 function CanvasSelector(props){
 
-    var [canvases, setCanvases] = useState([]);
+    var [canvases, setCanvases] = useState();
 
     useEffect(() => {
         fetchErr('http://localhost:8080/api/secured/subscriptions',
@@ -30,7 +31,7 @@ function CanvasSelector(props){
 
     var canvasListToListItems = (canvasList) => {
         var elementList = canvasList.map((canvas) => 
-            <li onClick={() => props.setSelectedCanvas(canvas.name)}>{canvas.name}</li>
+            <div className="subscribedCanvas" onClick={() => props.setSelectedCanvas(canvas.name)}>{canvas.name}</div>
         );
         console.log(elementList)
         return elementList;
@@ -41,10 +42,8 @@ function CanvasSelector(props){
     }
     
     return(
-        <div className="loginPage">
-            <ul>
-                {canvases}
-            </ul>
+        <div className="subscribedCanvasesContainer">
+            {canvases}
         </div>
     );
     

@@ -3,7 +3,7 @@ import './DrawingCanvas.css';
 import { Client } from '@stomp/stompjs';
 import Line from './Line';
 import Message from './Message';
-import fetchErr from '../Utils/FetchErr'
+import fetchErr from '../../../Utils/FetchErr'
 
 class DrawingCanvas extends Component{
     constructor(){

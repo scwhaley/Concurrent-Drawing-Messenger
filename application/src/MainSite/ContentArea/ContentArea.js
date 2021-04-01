@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Switch, Route } from "react-router-dom";
-import CanvasSelector from '../DrawingCanvas/CanvasSelector';
-import DrawingCanvas from '../DrawingCanvas/DrawingCanvas.js';
+import CanvasSelector from './CanvasSelector/CanvasSelector';
+import DrawingCanvas from './DrawingCanvas/DrawingCanvas';
 
-function MainArea(){
+function ContentArea(){
 
     var [selectedCanvas, setSelectedCanvas] = useState('');
 
@@ -28,4 +28,4 @@ function MainArea(){
     );
 }
 
-export default MainArea;
+export default ContentArea;
