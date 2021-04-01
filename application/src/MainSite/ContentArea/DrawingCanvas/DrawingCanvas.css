@@ -2,3 +2,7 @@ canvas{
     border: black;
     background-color: white;
   }
+
+.canvasTitle{
+  text-align: center;
+}

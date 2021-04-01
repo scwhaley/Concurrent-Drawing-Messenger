@@ -1,11 +1,23 @@
 .headerContainer {
-    color: azure;
+    display: grid;
+    grid-template-areas: 
+    "logo name account";
+    grid-template-columns: 1fr 3fr 1fr;
 }
 
 .logo {
-    justify-self: left;
+    grid-area: logo;
+    text-align: left;
+    margin: 0%;
 }
 
 .websiteName {
-    justify-self: center;
+    grid-area: name;
+    text-align: center;
+    margin: 0%;
+}
+
+.bottomSeperator{
+    margin: 0;
+    color: red;
 }

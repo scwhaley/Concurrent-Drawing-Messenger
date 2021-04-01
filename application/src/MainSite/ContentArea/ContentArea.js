@@ -1,26 +1,19 @@
-import React, { useState } from 'react'
 import { Switch, Route } from "react-router-dom";
 import CanvasSelector from './CanvasSelector/CanvasSelector';
 import DrawingCanvas from './DrawingCanvas/DrawingCanvas';
 
-function ContentArea(){
+function ContentArea(props){
 
-    var [selectedCanvas, setSelectedCanvas] = useState('');
-
-    if(selectedCanvas !== ''){
-        console.log("selectedCanvas !== ''. it equals: " + selectedCanvas);
-    }
     return(
-        <div className="mainArea">
-            <h1>Selected Canvas: {selectedCanvas}</h1>
+        <div className="contentArea">
             <Switch>
 
                 <Route exact path="/main">
-                    <CanvasSelector setSelectedCanvas={setSelectedCanvas} selectedCanvas={selectedCanvas}/>
+                    <CanvasSelector setSelectedCanvas={props.setSelectedCanvas} selectedCanvas={props.selectedCanvas}/>
                 </Route>
 
                 <Route path="/main/canvas">
-                    <DrawingCanvas selectedCanvas={selectedCanvas}/> 
+                    <DrawingCanvas selectedCanvas={props.selectedCanvas}/> 
                 </Route>
 
             </Switch>

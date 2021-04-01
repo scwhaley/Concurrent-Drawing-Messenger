@@ -9,6 +9,7 @@ import Welcome from './Welcome/Welcome'
 import PrivateRoute from './Utils/PrivateRoute'
 import Signup from './Signup/Signup';
 import ContentArea from './MainSite/ContentArea/ContentArea';
+import MainSite from './MainSite/MainSite';
 
 function App(){
   return(
@@ -19,7 +20,7 @@ function App(){
           <Welcome/>
         </Route>
 
-        <PrivateRoute path="/main" component={ContentArea}/>
+        <PrivateRoute path="/main" component={MainSite}/>
     
 
         <Route path="/login">

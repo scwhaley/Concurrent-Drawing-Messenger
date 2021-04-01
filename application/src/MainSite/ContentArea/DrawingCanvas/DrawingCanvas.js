@@ -194,9 +194,8 @@ class DrawingCanvas extends Component{
     render(){
         return(
             <div>
+                <h2 className="canvasTitle">{this.props.selectedCanvas}</h2>
                 <canvas id="CanvasID" />
-                <h1>dfgdfg</h1>
-                <button onClick={this.testSecured}>Test secured</button>
             </div>
         );
     };
