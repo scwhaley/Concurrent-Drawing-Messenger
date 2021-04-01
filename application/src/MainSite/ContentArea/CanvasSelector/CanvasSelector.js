@@ -32,16 +32,16 @@ function CanvasSelector(props){
 
     var canvasListToListItems = (canvasList) => {
         var elementList = canvasList.map((canvas) => 
-            <CanvasItem canvasInfo={canvas} onCanvasClick={() => onCanvasClick(canvas.name)}/>
+            <CanvasItem key={canvas.canvasID} canvas={canvas} onCanvasClick={() => onCanvasClick(canvas)}/>
         );
         console.log(elementList)
         return elementList;
     }
     
-    var onCanvasClick = (canvasName) => {
-        props.setSelectedCanvas(canvasName)
-        history.push('/main/canvas')
-    }
+    var onCanvasClick = (canvas) => {
+        props.setSelectedCanvas(canvas);
+        history.push('/main/canvas');
+    };
     
     return(
         <div>

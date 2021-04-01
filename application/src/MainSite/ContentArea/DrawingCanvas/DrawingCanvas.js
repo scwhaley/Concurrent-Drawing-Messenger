@@ -51,10 +51,10 @@ class DrawingCanvas extends Component{
             onConnect: (frame) => {
                 console.log("Connected");
                 //This subscription is for listening to draw commands from all users subsrived to the canvas
-                const subscription = this.state.stompClient.subscribe("/topic/message/room1", this.handleIncomingMessages);
+                const subscription = this.state.stompClient.subscribe("/topic/message/" + this.props.selectedCanvas.canvasID, this.handleIncomingMessages);
                 //This message is only to send a one-time request to synchronize the canvases.
                 var syncMessage = new Message("Sync", "");
-                this.state.stompClient.publish({destination: "/topic/message/room1", body: JSON.stringify(syncMessage)})
+                this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(syncMessage)})
                 this.setState({
                     subscription: subscription
                 })
@@ -127,7 +127,7 @@ class DrawingCanvas extends Component{
         
         var canvasDataURL = canvas.toDataURL();
         var message = new Message("Refresh", canvasDataURL);
-        this.state.stompClient.publish({destination: "/topic/message/room1", body: JSON.stringify(message)});
+        this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(message)});
     }
 
     // Drawing functions
@@ -153,7 +153,7 @@ class DrawingCanvas extends Component{
         if(this.state.mouseIsDown){
             var line = new Line(this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
             var message = new Message("Draw", line);
-            this.state.stompClient.publish({destination: "/topic/message/room1", body: JSON.stringify(message)});
+            this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(message)});
             this.setState({
                 canvasLastX: e.offsetX,
                 canvasLastY: e.offsetY
@@ -172,29 +172,10 @@ class DrawingCanvas extends Component{
         context.closePath();
     };
 
-    testSecured = () => {
-        fetchErr('http://localhost:8080/api/secured/subscriptions',
-                {method: 'GET', 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization':  'Bearer ' + localStorage.getItem('JWT')
-                }
-                })
-        .then(response => response.json())
-        .then(json => {
-            json.forEach((canvas, index) => {
-                console.log("At index " + index + ": " + canvas.name)
-            });
-        })
-        .catch(err => {
-            err.response.json().then(json => console.log(json));
-        });
-    }   
-
     render(){
         return(
             <div>
-                <h2 className="canvasTitle">{this.props.selectedCanvas}</h2>
+                <h2 className="canvasTitle">{this.props.selectedCanvas.name}</h2>
                 <canvas id="CanvasID" />
             </div>
         );
