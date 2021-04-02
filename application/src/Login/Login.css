@@ -1,22 +1,92 @@
+.loginPage{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.loginContainer{
+    height: fit-content;
+    padding: 1em;
+    box-shadow: 2px 2px 3px lightgray;
+    border-radius: .25em;
+    border: 1px solid lightgray;
+    width: 20%;
+}
+
 h2{
     font-size: xx-large;
+    text-align: center;
+    color: #7A7A7A;
 }
 
 .loginForm {
     display: flex;
-    width: 100%;
     height: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.loginPage{
+.invalidCreds {
+    border: 1px solid lightcoral;
+    background-color: lightpink;
     width: 100%;
-    height: 100%;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    color: crimson;
+    font-size: 15px;
+    border-radius: .2em;
+    
+}
+
+.loginUsername{
+    background-color: #F2F2F2;
+    padding: .5em;
+    border-style: none;
+    width: 100%;
+    margin-bottom: .5em;
+}
+.loginPassword{
+    background-color: #F2F2F2;
+    padding: .5em;
+    border-style: none;
+    width: 100%;
+    margin-bottom: .5em;
+}
+
+.forgotPassword {
+    color: gray;
+    text-align: right;
+    font-size: 10px;
+    width: 100%;
 }
 
 .submitButton {
-    text-align: center;
-    margin: 5px;
+    padding:0.35em 1.2em;
+    border:0.1em none #FFFFFF;
+    margin:0.3em 0 0.3em 0;
+    border-radius:0.2em;
+    text-decoration:none;
+    font-size: 15px;
+    font-family: 'Ubuntu', sans-serif;
+    color:#FFFFFF;
+    text-align:center;
+    transition: all 0.2s;
+    opacity: 0.75;
+    width: 100%;
+    background-color: #2196F3;;
+}
+
+.submitButton:hover {
+    opacity: 1.0;
+}
+.signUpLink {
+    display: inline;
+}
+
+.signUpLinkContainer {
+    font-size: 10px;
+    margin-top: 1em;
 }

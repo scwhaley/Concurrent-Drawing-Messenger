@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Redirect, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import './Login.css';
 import User from "../User"
 import fetchErr from '../Utils/FetchErr';
@@ -8,6 +8,7 @@ function Login(){
     var [username, setUsername] = useState("");
     var [password, setPassword] = useState("");
     var [successfulLogin, setSuccessfulLogin] = useState(false);
+    var [credsInvalid, setCredsInvalid] = useState(false);
 
     //Get browser history
     let history = useHistory();
@@ -50,10 +51,12 @@ function Login(){
                     if(successful === true){
                         console.log("Going back...")
                         setSuccessfulLogin(true);
+                        setCredsInvalid(false);
                     };
                 })
                 //If unsuccessful. log the error
                 .catch(error => {
+                    setCredsInvalid(true);
                     error.response.json()
                     .then(json => {
                         console.log(json)
@@ -68,22 +71,32 @@ function Login(){
         return <Redirect push to="/main"/>
     }
 
+    var onInvalidCredentials = (credsInvalid) => {
+        return credsInvalid ? <div className='invalidCreds'>Invalid credentials</div> : null;
+    }
+    
+
 
     return(
         <div className="loginPage">
-            <div className="loginForm">
+            <div className='loginContainer'>
                 <h2>Login</h2>
-                <form onSubmit={loginSubmitHandler}>
-                    <input id="loginUsername" type="text" placeholder="Username" onChange={usernameChangeHandler} aria-label="Login Username"></input><br/>
-                    <input id="loginPassword" type="text" placeholder="Password" onChange={passwordChangeHandler} aria-label="Login Password"></input><br/>
-                    <div className="submitButton">
-                        <input id="submit" type="submit" value="Submit"/>
-                    </div>
-                </form>
+                <div className="loginFormContainer">
+                    <form className="loginForm">
+                        {onInvalidCredentials(credsInvalid)}
+                        <input className="loginUsername" type="text" placeholder="Username" onChange={usernameChangeHandler} aria-label="Login Username"></input>
+                        <input className="loginPassword" type="password" placeholder="Password" onChange={passwordChangeHandler} aria-label="Login Password"></input>
+                        <Link to="/login"className="forgotPassword">Forgot Password?</Link>
+                        <button className="submitButton" onClick={loginSubmitHandler}>Log In</button>
+                    </form>
+                </div>
+            </div>
+            <div className="signUpLinkContainer">
+                <span>Don't have an account? </span><Link to="/signup" className="signUpLink">Sign up here!</Link>
             </div>
         </div>
     );
     
 }
 
-export default Login
+export default Login;

@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link, Redirect} from 'react-router-dom';
+import './Welcome.css'
 
 function Welcome(){
     //Check if user is already logged in
@@ -8,13 +9,11 @@ function Welcome(){
     //Page to display if not logged in
     function welcomePage(){
         return(
-            <div>
-                <h1>Welcome to Concurrent Drawing Messenger</h1>
-                <Link to="/login">Login</Link>
-                <p>or</p>
-                <Link to="/signup">Signup</Link>
-                <p>or</p>
-                <Link to="/test">Test</Link>
+            <div className="welcomeContainer">
+                <h1 className="title">Welcome to Website Name</h1>
+                <h2 className="subtitle">Draw together with your friends to make a masterpiece!</h2>
+                <Link className='welcomeLink loginLink' to="/login">Login</Link>
+                <Link className='welcomeLink signupLink' to="/signup">Get Started</Link>
             </div>
         );
     }

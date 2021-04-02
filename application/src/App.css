@@ -1,4 +1,4 @@
-.TopAppDiv{
+.appDiv{
   height: 100%;
 }
 
@@ -6,4 +6,5 @@
   margin-left: 60px;
   transition: margin-left .5s
 }
+
 

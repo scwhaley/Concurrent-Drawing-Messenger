@@ -6,30 +6,33 @@ import {
 } from "react-router-dom";
 import Login from './Login/Login.js';
 import Welcome from './Welcome/Welcome'
-import PrivateRoute from './Utils/PrivateRoute'
+import PrivatePage from './Utils/PrivatePage'
 import Signup from './Signup/Signup';
 import ContentArea from './MainSite/ContentArea/ContentArea';
 import MainSite from './MainSite/MainSite';
+import Page from './Utils/Page'
 
 function App(){
   return(
-    <div>
+    <div className='appDiv'>
       <Switch>
 
-        <Route exact path="/">
+        <Page exact path="/" title='Home | WebsiteName'>
           <Welcome/>
-        </Route>
+        </Page>
 
-        <PrivateRoute path="/main" component={MainSite}/>
+        <PrivatePage path="/main" title='Main | WebsiteName'>
+          <MainSite/>
+        </PrivatePage>
     
 
-        <Route path="/login">
+        <Page path="/login" title='Login | WebsiteName'>
           <Login />
-        </Route>
+        </Page>
 
-        <Route path="/signup">
+        <Page path="/signup" title='Signup | WebsiteName'>
           <Signup/>
-        </Route>
+        </Page>
         
       </Switch>
     </div>
