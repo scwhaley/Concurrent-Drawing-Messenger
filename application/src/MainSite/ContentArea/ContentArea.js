@@ -2,6 +2,7 @@ import { Switch } from "react-router-dom";
 import Page from '../../Utils/Page'
 import CanvasSelector from './CanvasSelector/CanvasSelector';
 import DrawingCanvas from './DrawingCanvas/DrawingCanvas';
+import '../ContentArea/ContentArea.css'
 
 function ContentArea(props){
 
@@ -15,6 +16,7 @@ function ContentArea(props){
                 </Page>
 
                 <Page path="/main/canvas" title={canvasPageTitle}>
+                    <h2 className="canvasTitle">{props.selectedCanvas.name}</h2>
                     <DrawingCanvas selectedCanvas={props.selectedCanvas}/> 
                 </Page>
 

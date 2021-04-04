@@ -1,6 +1,10 @@
 canvas{
-    border: black;
+    border: 1px solid black;
     background-color: white;
+  }
+
+  .canvasContainer {
+    height: 100%;
   }
 
 .canvasTitle{
