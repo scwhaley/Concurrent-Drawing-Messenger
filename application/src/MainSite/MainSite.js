@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
-import { Switch, Route } from "react-router-dom";
-import CanvasSelector from './ContentArea/CanvasSelector/CanvasSelector';
 import ContentArea from './ContentArea/ContentArea';
-import DrawingCanvas from './ContentArea/DrawingCanvas/DrawingCanvas';
 import Header from './Header/Header'
 import '../MainSite/MainSite.css'
 

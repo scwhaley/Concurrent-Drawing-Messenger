@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import './Login.css';
 import User from "../User"
 import fetchErr from '../Utils/FetchErr';
@@ -9,9 +9,6 @@ function Login(){
     var [password, setPassword] = useState("");
     var [successfulLogin, setSuccessfulLogin] = useState(false);
     var [credsInvalid, setCredsInvalid] = useState(false);
-
-    //Get browser history
-    let history = useHistory();
 
     var usernameChangeHandler = (event) => {
         setUsername(event.target.value);

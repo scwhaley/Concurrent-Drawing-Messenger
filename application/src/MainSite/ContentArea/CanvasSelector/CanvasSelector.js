@@ -4,6 +4,7 @@ import fetchErr from '../../../Utils/FetchErr';
 import './CanvasSelector.css'
 import './CanvasItem'
 import CanvasItem from './CanvasItem';
+import NewCanvas from './NewCanvas';
 
 function CanvasSelector(props){
 
@@ -48,6 +49,7 @@ function CanvasSelector(props){
             <h1>Recent canvases</h1>
             <div className="subscribedCanvasesContainer">
                 {canvases}
+                <NewCanvas/>
             </div>
         </div>
 

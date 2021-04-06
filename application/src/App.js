@@ -1,14 +1,10 @@
 import './App.css';
 import React from 'react'
-import {
-  Switch,
-  Route
-} from "react-router-dom";
+import { Switch } from "react-router-dom";
 import Login from './Login/Login.js';
 import Welcome from './Welcome/Welcome'
 import PrivatePage from './Utils/PrivatePage'
 import Signup from './Signup/Signup';
-import ContentArea from './MainSite/ContentArea/ContentArea';
 import MainSite from './MainSite/MainSite';
 import Page from './Utils/Page'
 

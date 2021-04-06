@@ -1,4 +1,4 @@
-import { Route, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import GetJWTPayloadDecoded from './GetJWTPayloadDecoded';
 import Page from './Page'
 
