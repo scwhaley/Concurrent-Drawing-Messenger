@@ -17,9 +17,14 @@ public class CanvasService {
     @Autowired
     private CanvasRepository canvasRepo;
     
-    public List<Canvas> getSubscribedCanvasesByUserId(int userId){
+    public List<Canvas> getSubscribedCanvasesByUserId(Integer userId){
         List<Canvas> subcribedCanvases = canvasRepo.getSubscribedCanvasesByUserId(userId);
         logger.info("Subbed Canvases: " + subcribedCanvases.size());
         return subcribedCanvases;
+    }
+
+    public void createAndSubscribeToCanvas(String canvasName){
+        Canvas newCanvas = new Canvas();
+        //canvasRepo.save();
     }
 }

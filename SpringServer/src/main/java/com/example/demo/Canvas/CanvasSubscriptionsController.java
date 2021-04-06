@@ -27,7 +27,7 @@ public class CanvasSubscriptionsController{
     @Autowired
     private CanvasService canvasService;
     
-    @GetMapping("api/secured/subscriptions")
+    @GetMapping("api/secured/canvas-subscriptions")
     public ResponseEntity<List<Canvas>> getSubscribedCanvases() throws JsonProcessingException {
         Authentication x = SecurityContextHolder.getContext().getAuthentication();
 
@@ -42,5 +42,11 @@ public class CanvasSubscriptionsController{
         List<Canvas> subscribedCanvases = canvasService.getSubscribedCanvasesByUserId(authDetails.get("user_id").asInt());
         
         return new ResponseEntity<List<Canvas>>(subscribedCanvases, null, HttpStatus.OK);    
+    }
+
+    public ResponseEntity<Canvas> createCanvas() throws JsonProcessingException {
+
+        return new ResponseEntity<Canvas>(new Canvas(), null, HttpStatus.OK);    
+
     }
 }

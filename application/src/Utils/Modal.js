@@ -11,7 +11,7 @@ function Modal(props) {
     }
 
     return(
-        <div className='modal' ref={modal} onClick={modalCloseClick}>
+        <div className='modal' ref={modal} onMouseDown={modalCloseClick}>
             <div className='modalContent'>
                 {props.content}
             </div>

@@ -46,6 +46,7 @@ h2{
     padding: .5em;
     border-style: none;
     width: 100%;
+    box-sizing: border-box;
     margin-bottom: .5em;
 }
 .loginPassword{
@@ -53,6 +54,7 @@ h2{
     padding: .5em;
     border-style: none;
     width: 100%;
+    box-sizing: border-box;
     margin-bottom: .5em;
 }
 

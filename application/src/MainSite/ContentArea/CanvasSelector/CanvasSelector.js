@@ -12,7 +12,7 @@ function CanvasSelector(props){
     var history = useHistory();
 
     useEffect(() => {
-        fetchErr('http://localhost:8080/api/secured/subscriptions',
+        fetchErr('http://localhost:8080/api/secured/canvas-subscriptions',
                 {method: 'GET', 
                 headers: {
                     'Content-Type': 'application/json',
