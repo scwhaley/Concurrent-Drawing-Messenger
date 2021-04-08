@@ -3,6 +3,10 @@ package com.example.demo.Canvas;
 import java.util.List;
 
 import com.example.demo.DemoApplication;
+import com.example.demo.Canvas.Canvas.Canvas;
+import com.example.demo.Canvas.Canvas.CanvasRepository;
+import com.example.demo.Canvas.CanvasSubscription.CanvasSubscription;
+import com.example.demo.Canvas.CanvasSubscription.CanvasSubscriptionRepo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +20,8 @@ public class CanvasService {
 
     @Autowired
     private CanvasRepository canvasRepo;
+    @Autowired
+    private CanvasSubscriptionRepo canvasSubscriptionRepo;
     
     public List<Canvas> getSubscribedCanvasesByUserId(Integer userId){
         List<Canvas> subcribedCanvases = canvasRepo.getSubscribedCanvasesByUserId(userId);
@@ -23,8 +29,13 @@ public class CanvasService {
         return subcribedCanvases;
     }
 
-    public void createAndSubscribeToCanvas(String canvasName){
-        Canvas newCanvas = new Canvas();
-        //canvasRepo.save();
+    public Canvas createAndSubscribeToCanvas(String canvasName, Integer userID){
+        Canvas newCanvas = new Canvas(canvasName);
+        CanvasSubscription newSub = new CanvasSubscription(newCanvas.getCanvasID(), userID);
+
+        Canvas canvas = canvasRepo.save(newCanvas);
+        canvasSubscriptionRepo.save(newSub);
+
+        return canvas;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.demo.Canvas;
+package com.example.demo.Canvas.Canvas;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +17,7 @@ public class Canvas {
 
     protected Canvas() {};
 
-    public Canvas(Integer id, String name){
-        this.canvas_ID = id;
+    public Canvas(String name){
         this.name = name;
     }
 

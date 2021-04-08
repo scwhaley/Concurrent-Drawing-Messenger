@@ -1,4 +1,4 @@
-package com.example.demo.Canvas;
+package com.example.demo.Canvas.Canvas;
 
 import java.util.List;
 

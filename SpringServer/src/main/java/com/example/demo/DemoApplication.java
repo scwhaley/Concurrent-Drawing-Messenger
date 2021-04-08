@@ -6,9 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.example.demo.UserInfo.ApplicationUser;
-import com.example.demo.UserInfo.UserRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +16,6 @@ public class DemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
-		logger.info("Test");
 	}
 
 	@Bean
@@ -28,11 +24,9 @@ public class DemoApplication {
     }
 
 	@Bean
-	public CommandLineRunner test(UserRepository repo){
+	public CommandLineRunner test(){
 		return (args) -> {
-			logger.info("test2");
-			ApplicationUser testFindUser = repo.findByUsername("testUser1");
-			logger.info(testFindUser.getUsername());
+			logger.info("Server started");
 		};
 	}
 

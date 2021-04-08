@@ -1,13 +1,18 @@
-package com.example.demo.Canvas;
+package com.example.demo.Canvas.CanvasSubscription;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "canvas_subscriptions")
+@IdClass(CanvasSubscriptionId.class)
 public class CanvasSubscription {
 
+    @Id
     private Integer canvasID;
+    @Id
     private Integer userID;
 
     protected CanvasSubscription(){};
