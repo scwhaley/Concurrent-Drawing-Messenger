@@ -3,9 +3,13 @@ package com.example.demo.Canvas.CanvasSubscription;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.Column;
+
 public class CanvasSubscriptionId implements Serializable {
 
+    @Column(name = "canvas_id")
     private Integer canvasID;
+    @Column(name = "user_id")
     private Integer userID;
     
     public CanvasSubscriptionId () {}

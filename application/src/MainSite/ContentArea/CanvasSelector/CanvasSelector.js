@@ -4,15 +4,16 @@ import fetchErr from '../../../Utils/FetchErr';
 import './CanvasSelector.css'
 import './CanvasItem'
 import CanvasItem from './CanvasItem';
-import NewCanvas from './NewCanvas';
+import NewCanvasModal from './NewCanvasModal';
 
 function CanvasSelector(props){
 
     var [canvases, setCanvases] = useState();
+    var [newCanvasCreated, setNewCanvasCreated] = useState(false);
     var history = useHistory();
 
     useEffect(() => {
-        fetchErr('http://localhost:8080/api/secured/canvas-subscriptions',
+        fetchErr('http://localhost:8080/api/secured/subscribed-canvas',
                 {method: 'GET', 
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,7 +30,7 @@ function CanvasSelector(props){
         .catch(err => {
             err.response.json().then(json => console.log(json));
         });
-    }, [])
+    }, [newCanvasCreated])
 
     var canvasListToListItems = (canvasList) => {
         var elementList = canvasList.map((canvas) => 
@@ -49,7 +50,7 @@ function CanvasSelector(props){
             <h1>Recent canvases</h1>
             <div className="subscribedCanvasesContainer">
                 {canvases}
-                <NewCanvas/>
+                <NewCanvasModal setNewCanvasCreated={setNewCanvasCreated}/>
             </div>
         </div>
 

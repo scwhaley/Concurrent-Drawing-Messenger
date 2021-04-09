@@ -1,4 +1,4 @@
-.loginPage{
+.signupPage{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -6,7 +6,7 @@
     height: 100%;
 }
 
-.loginContainer{
+.signupContainer{
     height: fit-content;
     padding: 1em;
     box-shadow: 2px 2px 3px lightgray;
@@ -21,7 +21,7 @@ h2{
     color: #7A7A7A;
 }
 
-.loginForm {
+.signupForm {
     display: flex;
     height: 100%;
     flex-direction: column;
@@ -41,15 +41,7 @@ h2{
     
 }
 
-.loginUsername{
-    background-color: #F2F2F2;
-    padding: .5em;
-    border-style: none;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: .5em;
-}
-.loginPassword{
+input {
     background-color: #F2F2F2;
     padding: .5em;
     border-style: none;
@@ -84,12 +76,12 @@ h2{
 .submitButton:hover {
     opacity: 1.0;
 }
-.signUpLink {
-    background-color: transparent;
+.loginLink {
+    background-color: transparent !important;
     display: inline;
 }
 
-.signUpLinkContainer {
+.loginLinkContainer {
     font-size: 10px;
     margin-top: 1em;
 }

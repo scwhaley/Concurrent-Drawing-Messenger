@@ -3,18 +3,23 @@ import Modal from "../../../Utils/Modal";
 import './NewCanvas.css'
 import NewCanvasForm from "./NewCanvasForm";
 
-function NewCanvas(props) {
+function NewCanvasModal(props) {
 
     var [modalIsOpen, setModalOpen] = useState(false);
+
+    //This must be present to reset the flag so that a transition occurs for the useEffect in CanvasSelector
+    if(!modalIsOpen){
+        props.setNewCanvasCreated(false);
+    }
 
     return (
         <>
             <div className="subscribedCanvas newCanvasSelection" onClick={() => setModalOpen(true)}>
                 <div className="canvasItemThumbnail">+</div>
             </div>
-            {modalIsOpen ? <Modal setModalOpen={setModalOpen} content={<NewCanvasForm/>}/> : null }
+            {modalIsOpen ? <Modal setModalOpen={setModalOpen} content={<NewCanvasForm setModalOpen={setModalOpen} setNewCanvasCreated={props.setNewCanvasCreated}/>}/> : null }
         </>
     )
 }
 
-export default NewCanvas;
+export default NewCanvasModal;

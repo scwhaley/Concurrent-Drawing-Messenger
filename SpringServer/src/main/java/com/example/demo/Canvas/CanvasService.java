@@ -30,10 +30,15 @@ public class CanvasService {
     }
 
     public Canvas createAndSubscribeToCanvas(String canvasName, Integer userID){
+        //limit canvas name to 50 chars by truncating
+        if(canvasName.length() > 50){
+            canvasName = canvasName.substring(0, 50);
+        }
         Canvas newCanvas = new Canvas(canvasName);
-        CanvasSubscription newSub = new CanvasSubscription(newCanvas.getCanvasID(), userID);
-
+        //Must save canvas first because the ID is set by the database, not the constructor
         Canvas canvas = canvasRepo.save(newCanvas);
+
+        CanvasSubscription newSub = new CanvasSubscription(canvas.getCanvasID(), userID);        
         canvasSubscriptionRepo.save(newSub);
 
         return canvas;

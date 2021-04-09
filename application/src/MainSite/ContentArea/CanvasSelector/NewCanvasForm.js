@@ -2,7 +2,7 @@ import './NewCanvasForm.css'
 import {useState} from 'react'
 import fetchErr from '../../../Utils/FetchErr';
 
-function NewCanvasForm () {
+function NewCanvasForm (props) {
 
     var [canvasName, setCanvasName] = useState();
 
@@ -23,6 +23,8 @@ function NewCanvasForm () {
         .then(response => response.json())
         .then(canvas => {
             console.log("returned from fetch: " + canvas)
+            props.setNewCanvasCreated(true);
+            props.setModalOpen(false);
         })
         .catch(err => {
             err.response.json().then(json => console.log(json));
@@ -35,7 +37,7 @@ function NewCanvasForm () {
         <div className="newCanvasFormContainer">
             <h2>Create a new canvas</h2>
             <form className="newCanvasForm">
-                <input className="newCanvasName" type="text" placeholder="Canvas Name" onChange={canvasNameChangeHandler} aria-label="New Canvas Name"></input>
+                <input className="newCanvasName" type="text" placeholder="Canvas Name" maxLength="50" onChange={canvasNameChangeHandler} aria-label="New Canvas Name"></input>
                 <button className="submitButton" onClick={newCanvasSubmitHandler}>Create Canvas</button>
             </form>
         </div>

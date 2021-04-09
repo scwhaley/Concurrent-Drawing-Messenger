@@ -31,7 +31,7 @@ public class CanvasController{
     @Autowired
     private CanvasService canvasService;
     
-    @GetMapping("api/secured/subscribed-canvases")
+    @GetMapping("api/secured/subscribed-canvas")
     public ResponseEntity<List<Canvas>> getSubscribedCanvases() throws JsonProcessingException {
         
         //The auth details object is populated in the JWTAuthorizationFilter. It populates the details object with a Map<String,Claim> object
