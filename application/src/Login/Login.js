@@ -68,19 +68,13 @@ function Login(){
         return <Redirect push to="/main"/>
     }
 
-    var onInvalidCredentials = (credsInvalid) => {
-        return credsInvalid ? <div className='invalidCreds'>Invalid credentials</div> : null;
-    }
-    
-
-
     return(
         <div className="loginPage">
             <div className='loginContainer'>
                 <h2>Login</h2>
                 <div className="loginFormContainer">
                     <form className="loginForm">
-                        {onInvalidCredentials(credsInvalid)}
+                        {credsInvalid ? <div className='invalidCreds'>Invalid credentials</div> : null}
                         <input className="loginUsername" type="text" placeholder="Username" onChange={usernameChangeHandler} aria-label="Login Username"></input>
                         <input className="loginPassword" type="password" placeholder="Password" onChange={passwordChangeHandler} aria-label="Login Password"></input>
                         <Link to="/login"className="forgotPassword">Forgot Password?</Link>

@@ -38,7 +38,7 @@ h2{
     color: crimson;
     font-size: 15px;
     border-radius: .2em;
-    
+    box-sizing: border-box;
 }
 
 .loginUsername{

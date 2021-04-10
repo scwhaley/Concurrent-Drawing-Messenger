@@ -29,32 +29,46 @@ h2{
     align-items: center;
 }
 
-.invalidCreds {
+.passwordMismatchPrompt {
     border: 1px solid lightcoral;
     background-color: lightpink;
     width: 100%;
     padding: 0.5em;
-    margin-bottom: 1em;
+    margin-bottom: .5em;
     color: crimson;
     font-size: 15px;
     border-radius: .2em;
-    
+    box-sizing: border-box;
+    animation-name: fadeIn;
+    animation-duration: .5s;
+}
+
+.fadeIn{
+    animation-name: fadeIn;
+    animation-duration: .5s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 input {
     background-color: #F2F2F2;
     padding: .5em;
     border-style: none;
+    border-radius: 3px;
     width: 100%;
     box-sizing: border-box;
     margin-bottom: .5em;
 }
 
-.forgotPassword {
-    color: gray;
-    text-align: right;
-    font-size: 10px;
-    width: 100%;
+.confirmPasswordMismatch {
+    border: 1px solid red;
 }
 
 .submitButton {
@@ -76,12 +90,12 @@ input {
 .submitButton:hover {
     opacity: 1.0;
 }
-.loginLink {
-    background-color: transparent !important;
+.loginInsteadLink {
+    background-color: transparent;
     display: inline;
 }
 
-.loginLinkContainer {
+.loginInsteadLinkContainer {
     font-size: 10px;
     margin-top: 1em;
 }
