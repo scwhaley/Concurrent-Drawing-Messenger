@@ -13,6 +13,7 @@ a.welcomeLink {
     transition: all 0.2s;
     opacity: 0.75;
     width: 25%;
+    min-width: 240px;
 }
 
 a:hover{

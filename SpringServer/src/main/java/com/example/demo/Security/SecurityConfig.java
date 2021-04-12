@@ -58,6 +58,7 @@ import org.springframework.web.filter.CorsFilter;
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://192.168.0.11:3000");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");

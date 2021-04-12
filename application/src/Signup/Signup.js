@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import User from "../User"
 import fetchErr from '../Utils/FetchErr';
 import SignupError from "./SignupError"
@@ -13,6 +13,9 @@ function Signup(){
     var [passwordMismatch, setPasswordMismatch] = useState(false);
     var [credsInvalid, setCredsInvalid] = useState(false);
     var [errorMessage, setErrorMessage] = useState('');
+    var [debugText, setDebugText] = useState('');
+
+    var history = useHistory();
 
     //when password or confirm password change, then check for mismatch
     useEffect(() => {
@@ -34,7 +37,7 @@ function Signup(){
         console.log(JSON.stringify(user));
 
         //Post user credentials to login URL
-        fetchErr('http://localhost:8080/api/public/signup',
+        fetchErr('http://192.168.0.10:8080/api/public/signup',
                 {method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json'
@@ -52,11 +55,12 @@ function Signup(){
                 })
                 //If unsuccessful, display the error message
                 .catch(error => {
-                    error.response.json()
-                    .then(json => {
-                        setCredsInvalid(true);
-                        setErrorMessage(json.message)
-                    })
+                    setDebugText(JSON.stringify(error));
+                    // error.response.json()
+                    // .then(json => {
+                    //     setCredsInvalid(true);
+                    //     setErrorMessage(json.message)
+                    // })
                 });
 
         //Prevent page refresh
@@ -82,6 +86,7 @@ function Signup(){
             <div className="loginInsteadLinkContainer">
                 <span>Already have an account? </span><Link to="/login" className="loginInsteadLink">Log in here!</Link>
             </div>
+            <h2>{debugText}</h2>
         </div>
     );
 }
