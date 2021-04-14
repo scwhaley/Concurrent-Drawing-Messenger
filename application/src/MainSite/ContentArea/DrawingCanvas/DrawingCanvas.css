@@ -1,6 +1,7 @@
 canvas{
     border: 1px solid black;
     background-color: white;
+    touch-action: manipulation;
   }
 
   .canvasContainer {

@@ -47,7 +47,7 @@ function CanvasSelector(props){
     
     return(
         <div>
-            <h1>Recent canvases</h1>
+            <h1 className="canvasSelectorTitle">Recent canvases</h1>
             <div className="subscribedCanvasesContainer">
                 {canvases}
                 <NewCanvasModal setNewCanvasCreated={setNewCanvasCreated}/>

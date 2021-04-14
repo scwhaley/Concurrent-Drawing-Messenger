@@ -3,6 +3,12 @@
     grid-template-areas: 
     "logo name account";
     grid-template-columns: 1fr 3fr 1fr;
+    border-bottom: solid lightgray 1px;
+    
+    border-top: solid #2196F3 2px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+    background-color: #fafafb;
+    /* 0 1px 2px rgba(0,0,0,0.05),0 1px 4px rgba(0,0,0,0.05),0 2px 8px rgba(0,0,0,0.05); */
 }
 
 .logo {
@@ -15,9 +21,4 @@
     grid-area: name;
     text-align: center;
     margin: 0%;
-}
-
-.bottomSeperator{
-    margin: 0;
-    color: red;
 }

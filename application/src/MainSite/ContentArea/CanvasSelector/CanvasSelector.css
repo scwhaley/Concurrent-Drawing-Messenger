@@ -35,3 +35,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.canvasSelectorTitle {
+    margin: 0;
+    border-bottom: solid lightgray 1px;
+}

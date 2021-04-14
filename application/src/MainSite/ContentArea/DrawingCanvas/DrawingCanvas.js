@@ -42,26 +42,31 @@ class DrawingCanvas extends Component{
     }
 
     //Touch event converter
+    //Link was the original code, but i have made a couple modifications for number of touches and reducing number of variables
     //https://stackoverflow.com/questions/1517924/javascript-mapping-touch-events-to-mouse-events
     touchToMouseEventConverted = (e) => {
-        var touches = e.changedTouches,
-        first = touches[0],
-        type = "";
-        switch(e.type)
-        {
-            case "touchstart": type = "mousedown"; break;
-            case "touchmove":  type = "mousemove"; break;        
-            case "touchend":   type = "mouseup";   break;
-            default:           return;
+        //Must be 0 (touchend) or 1 (touchstart and touchmove) touches only. 2 touches should be for zooming, not drawing
+        if(e.touches.length <= 1){
+            var first = e.changedTouches[0];
+            var type = "";
+    
+            switch(e.type)
+            {
+                case "touchstart": type = "mousedown"; break;
+                case "touchmove":  type = "mousemove"; break;        
+                case "touchend":   type = "mouseup";   break;
+                default:           return;
+            }
+            
+            var simulatedEvent = document.createEvent("MouseEvent");
+            simulatedEvent.initMouseEvent(type, true, true, window, 1, 
+                                        first.screenX, first.screenY, 
+                                        first.clientX, first.clientY, false, 
+                                        false, false, false, 0/*left*/, null);
+    
+            first.target.dispatchEvent(simulatedEvent);
         }
-
-        var simulatedEvent = document.createEvent("MouseEvent");
-        simulatedEvent.initMouseEvent(type, true, true, window, 1, 
-                                    first.screenX, first.screenY, 
-                                    first.clientX, first.clientY, false, 
-                                    false, false, false, 0/*left*/, null);
-
-        first.target.dispatchEvent(simulatedEvent);
+        //This should prevent mouse event as well, since add event listener has options to false.
         e.preventDefault();
     }
 
@@ -161,20 +166,26 @@ class DrawingCanvas extends Component{
 
     // Drawing functions
     canvasOnMouseDown = (e) => {
-        this.setState({
-            mouseIsDown: true,
-            canvasLastX: e.offsetX,
-            canvasLastY: e.offsetY
-        })
+        if(!this.state.mouseIsDown){
+            console.log("MouseDown")
+            this.setState({
+                mouseIsDown: true,
+                canvasLastX: e.offsetX,
+                canvasLastY: e.offsetY
+            })
+        }
     }
 
     // Drawing functions
     canvasOnMouseUp = (e) => {
-        this.setState({
-            mouseIsDown: false,
-            canvasLastX: e.offsetX,
-            canvasLastY: e.offsetY
-        })
+        if(this.state.mouseIsDown){
+        console.log("MouseUp");
+            this.setState({
+                mouseIsDown: false,
+                canvasLastX: e.offsetX,
+                canvasLastY: e.offsetY
+            })
+        }
     }
 
     // Drawing functions

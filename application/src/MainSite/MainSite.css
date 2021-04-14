@@ -1,3 +1,18 @@
 .mainArea {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.1fr auto;
+    grid-template-areas: 
+    "header"
+    "contentArea"
+    ;
     height: 100%;
+}
+
+.headerTableItemWrapper {
+    grid-area: header;
+}
+
+.contentAreaTableItemWrapper {
+    grid-area: contentArea;
 }

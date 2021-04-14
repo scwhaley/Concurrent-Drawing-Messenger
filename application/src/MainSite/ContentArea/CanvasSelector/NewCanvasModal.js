@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../../Utils/Modal";
 import './NewCanvas.css'
 import NewCanvasForm from "./NewCanvasForm";
@@ -8,9 +8,12 @@ function NewCanvasModal(props) {
     var [modalIsOpen, setModalOpen] = useState(false);
 
     //This must be present to reset the flag so that a transition occurs for the useEffect in CanvasSelector
-    if(!modalIsOpen){
-        props.setNewCanvasCreated(false);
-    }
+    useEffect(() => {
+        if(!modalIsOpen){
+            props.setNewCanvasCreated(false);
+        }
+    },[modalIsOpen])
+
 
     return (
         <>

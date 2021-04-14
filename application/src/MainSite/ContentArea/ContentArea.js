@@ -16,10 +16,8 @@ function ContentArea(props){
                 </Page>
 
                 <Page path="/main/canvas" title={canvasPageTitle}>
-                    <div className="drawingCanvasContainer">
-                        <h2 className="canvasTitle">{props.selectedCanvas.name}</h2>
-                        <DrawingCanvas selectedCanvas={props.selectedCanvas}/> 
-                    </div>
+                    <h2 className="canvasTitle">{props.selectedCanvas.name}</h2>
+                    <DrawingCanvas selectedCanvas={props.selectedCanvas}/>  
                 </Page>
 
             </Switch>

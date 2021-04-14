@@ -12,9 +12,12 @@ function MainSite(){
     }
     return(
         <div className="mainArea">
-            <Header/>
-
-            <ContentArea selectedCanvas={selectedCanvas} setSelectedCanvas={setSelectedCanvas}/>
+            <div className="headerTableItemWrapper">
+                <Header/>
+            </div>
+            <div className="contentAreaTableItemWrapper">
+                <ContentArea selectedCanvas={selectedCanvas} setSelectedCanvas={setSelectedCanvas}/>   
+            </div>
 
         </div>
     );
