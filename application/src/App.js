@@ -7,6 +7,7 @@ import PrivatePage from './Utils/PrivatePage'
 import Signup from './Signup/Signup';
 import MainSite from './MainSite/MainSite';
 import Page from './Utils/Page'
+import Sidebar from './Sidebar/Sidebar'
 
 function App(){
   return(

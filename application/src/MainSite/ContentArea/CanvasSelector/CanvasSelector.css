@@ -37,6 +37,11 @@
 }
 
 .canvasSelectorTitle {
+    display: inline-block ;
+    position: relative;
     margin: 0;
     border-bottom: solid lightgray 1px;
+    height: 56px;
+    width: 100%;
+    text-align: center;
 }

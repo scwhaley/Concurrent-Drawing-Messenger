@@ -1,46 +1,24 @@
 import React, {useState} from 'react'
 import './Sidebar.css';
-import ConversationItem from './ConversationItem.js'
+import SidebarItem from './SidebarItem';
 
 function Sidebar () {
 
-    var [isCollapsed, setCollapsed] = useState(false);
-
-    var sidebarToggleClick = (event) => {
-        setCollapsed(!isCollapsed);
-
-        if(isCollapsed){
-            document.getElementById("SidebarContainer").style.left = "-250px";
-        }
-        else{
-            document.getElementById("SidebarContainer").style.left = "0px";
-        }
-    }
-
-
-    var conversationClick = () => {
-
-    }
+    var [isCollapsed, setCollapsed] = useState(true);
 
     return(
-        <div id="SidebarContainer" className="SidebarContainer">
-            <div className="MenuContainer">
-                <ul>
-                    <li >Conversations</li>
-                    <ul>
-                        <ConversationItem conversationClick={conversationClick} text="Person 1"/>
-                        <ConversationItem conversationClick={conversationClick} text="Person 2"/>
-                        <ConversationItem conversationClick={conversationClick} text="Person 3"/>
-                    </ul>
-                    <li>E-Shop</li>
-                    <li>Settings</li>
+        <>
+            <div className={isCollapsed ? "SidebarContainer isCollapsed" : "SidebarContainer"}>
+                <ul className="MenuContainer">
+                    <SidebarItem to="/main" text="Canvases" setSidebarCollapsed={setCollapsed}/>
+                    <SidebarItem text="E-Shop" setSidebarCollapsed={setCollapsed}/>
+                    <SidebarItem text="Settings" setSidebarCollapsed={setCollapsed}/>
                 </ul>
-                
             </div>
-            <div className="ButtonContainer">
-                <button className="MenuToggleButton" onClick={sidebarToggleClick}>☰</button>
+            <div className={isCollapsed ? "ButtonContainer buttonIsCollapsed" : "ButtonContainer"}>
+                <button className="MenuToggleButton" onClick={(e) => setCollapsed(!isCollapsed)}>☰</button>
             </div>
-        </div>
+        </>
     );
 
 }
