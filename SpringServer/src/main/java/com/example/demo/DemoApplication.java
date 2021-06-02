@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 @SpringBootApplication
 public class DemoApplication {
 
-
 	private static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
 
 	public static void main(String[] args) {
@@ -29,7 +28,4 @@ public class DemoApplication {
 			logger.info("Server started");
 		};
 	}
-
-
-
 }
