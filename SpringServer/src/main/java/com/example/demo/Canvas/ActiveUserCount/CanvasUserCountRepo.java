@@ -3,7 +3,9 @@ package com.example.demo.Canvas.ActiveUserCount;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface CanvasUserCountRepo extends CrudRepository<CanvasUserCount, Integer> {
     
     //This inserts a new row, but if it alredy exists for the specified canvas, increments the number of active users
@@ -11,7 +13,7 @@ public interface CanvasUserCountRepo extends CrudRepository<CanvasUserCount, Int
     nativeQuery = true)
     public void incrementActiveUserCount(@Param("canvas_ID") Integer canvas_ID);
 
-    @Query(value = "UPDATE canvas_user_count SET active_users = canvas_user_count.active_users - 1",
+    @Query(value = "UPDATE canvas_user_count SET active_users = canvas_user_count.active_users - 1 WHERE canvas_ID = :canvas_ID",
     nativeQuery = true)
     public void decrementActiveUserCount(@Param("canvas_ID") Integer canvas_ID);
 }

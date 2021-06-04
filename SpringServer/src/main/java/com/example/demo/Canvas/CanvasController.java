@@ -66,5 +66,12 @@ public class CanvasController{
         logger.info("Created CanvasID = " + createdCanvas.getCanvasID());
         return new ResponseEntity<Canvas>(createdCanvas, null, HttpStatus.OK);
     }
+
+    @GetMapping("api/secured/canvas/active-users")
+    public ResponseEntity<Integer> getCanvasActiveUserCount(@RequestBody Integer canvasID){
+        Integer numActiveUsers = canvasService.getNumberOfActiveUsers(canvasID);
+
+        return new ResponseEntity<Integer>(numActiveUsers, null, HttpStatus.OK);
+    }
 }
 
