@@ -21,6 +21,7 @@ public interface CanvasUserCountRepo extends CrudRepository<CanvasUserCount, Int
     public void incrementActiveUserCount(@Param("canvas_ID") Integer canvas_ID);
 
     @Modifying
+    @Transactional
     @Query(value = "UPDATE canvas_user_count SET active_users = canvas_user_count.active_users - 1 WHERE canvas_id = :canvas_ID",
     nativeQuery = true)
     public void decrementActiveUserCount(@Param("canvas_ID") Integer canvas_ID);

@@ -10,6 +10,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
@@ -18,35 +19,47 @@ public class CanvasSubscriptionEventListeners {
     
     private static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
     private CanvasUserCountRepo canvasUserCountRepo;
+    private ConnectionSessionCanvasRepo connectionSessionCanvasRepo;
 
-    public CanvasSubscriptionEventListeners(CanvasUserCountRepo canvasUserCountRepo) {
+    public CanvasSubscriptionEventListeners(CanvasUserCountRepo canvasUserCountRepo, ConnectionSessionCanvasRepo connectionSessionCanvasRepo) {
         this.canvasUserCountRepo = canvasUserCountRepo;
+        this.connectionSessionCanvasRepo = connectionSessionCanvasRepo;
     }
 
 	@EventListener(SessionSubscribeEvent.class)
 	public void handleWSSubscribeListener (SessionSubscribeEvent event){
-		String canvasID = extractCanvasID(event.getMessage());
+		Integer canvasID = Integer.decode(extractCanvasID(event.getMessage()));
+        String sessionID = extractSessionID(event.getMessage());
+		logger.info("Recieved WS Session Subscribe Event to canvasID: " + canvasID + " for sessionID: " + sessionID);
 
-		logger.info("Recieved WS Session Subscribe Event to canvasID: " + canvasID);
-        logger.info("User count before Subscribe Event = " + getNumberOfActiveUsers(Integer.decode(canvasID)));
+        ConnectionSessionCanvas sessionAndCanvas = new ConnectionSessionCanvas(sessionID, canvasID);
+        connectionSessionCanvasRepo.save(sessionAndCanvas);
 
-        canvasUserCountRepo.incrementActiveUserCount(Integer.decode(canvasID));
-        
-        logger.info("User count after Subscribe Event = " + getNumberOfActiveUsers(Integer.decode(canvasID)));
+        logger.info("User count before Subscribe Event = " + getNumberOfActiveUsers(canvasID));
+        canvasUserCountRepo.incrementActiveUserCount(canvasID);
+        logger.info("User count after Subscribe Event = " + getNumberOfActiveUsers(canvasID));
 	}
 
-    //This does not work as written since the UNSUBSCRIBE frame does not unsubscribe to a destination, it unsubsribers via ID of the subscription.
-    //This ID is specific to the connection (what does connectino exactly mean?). So we must find some way to correlate the ID to the destination.
     @EventListener(SessionUnsubscribeEvent.class)
 	public void handleWSUnsubscribeListener (SessionUnsubscribeEvent event){
-        String canvasID = extractCanvasID(event.getMessage());
+        StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
+        String sessionID = headers.getSessionId();
 
-		logger.info("Recieved WS Session unsubscribe Event to canvasID: " + canvasID);
-        logger.info("User count before unsubscribe Event = " + getNumberOfActiveUsers(Integer.decode(canvasID)));
+        Optional<ConnectionSessionCanvas> sessionAndCanvas = connectionSessionCanvasRepo.findById(sessionID);
 
-        canvasUserCountRepo.decrementActiveUserCount(Integer.decode(canvasID));
-        
-        logger.info("User count after unsubscribe Event = " + getNumberOfActiveUsers(Integer.decode(canvasID)));
+        if(sessionAndCanvas.isPresent()){
+            Integer canvasID = sessionAndCanvas.get().getCanvas_ID();
+            logger.info("Recieved WS Session unsubscribe Event to canvasID: " + canvasID);
+
+            logger.info("User count before unsubscribe Event = " + getNumberOfActiveUsers(canvasID));
+            canvasUserCountRepo.decrementActiveUserCount(canvasID);
+            logger.info("User count after unsubscribe Event = " + getNumberOfActiveUsers(canvasID));
+
+            connectionSessionCanvasRepo.delete(sessionAndCanvas.get());
+        }
+        else{
+            logger.warn("Recieved unsubscribe event for a session not linked to a canvas");
+        }		
 	}
 
     private Integer getNumberOfActiveUsers(Integer canvasID){
@@ -66,5 +79,10 @@ public class CanvasSubscriptionEventListeners {
         StompHeaderAccessor headers = StompHeaderAccessor.wrap(message);
         String destination = headers.getDestination();
         return destination.substring(destination.lastIndexOf("/")+1);
+    }
+
+    private String extractSessionID(Message<byte[]> message){
+        StompHeaderAccessor headers = StompHeaderAccessor.wrap(message);
+        return headers.getSessionId();
     }
 }
