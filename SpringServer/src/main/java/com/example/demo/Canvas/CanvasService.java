@@ -57,7 +57,7 @@ public class CanvasService {
 
         Optional<CanvasUserCount> canvasUserCount = canvasUserCountRepo.findById(canvasID);
         
-        // Returns 0 even if the canvasID does not exist
+        // Returns 0 if the canvasID does not exist. If the user is the first one using the canvas, then thye active user count = 1
         if(canvasUserCount.isPresent()){
             numActiveUsers = canvasUserCount.get().getActive_users();
         }

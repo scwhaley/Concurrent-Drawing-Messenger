@@ -70,6 +70,7 @@ public class CanvasController{
     @GetMapping("api/secured/canvas/active-users")
     public ResponseEntity<Integer> getCanvasActiveUserCount(@RequestBody Integer canvasID){
         Integer numActiveUsers = canvasService.getNumberOfActiveUsers(canvasID);
+        logger.info("There are " + numActiveUsers + " in canvasID = " + canvasID);
 
         return new ResponseEntity<Integer>(numActiveUsers, null, HttpStatus.OK);
     }

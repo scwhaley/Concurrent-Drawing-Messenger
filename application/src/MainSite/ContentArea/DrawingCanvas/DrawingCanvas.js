@@ -89,9 +89,11 @@ class DrawingCanvas extends Component{
                 console.log("Connected");
                 //This subscription is for listening to draw commands from all users subsrived to the canvas
                 const subscription = this.state.stompClient.subscribe("/topic/message/" + this.props.selectedCanvas.canvasID, this.handleIncomingMessages);
+
+                this.getActiveUserCount();
                 //This message is only to send a one-time request to synchronize the canvases.
-                var syncMessage = new Message("Sync", "");
-                this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(syncMessage)})
+                //var syncMessage = new Message("Sync", "");
+                //this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(syncMessage)})
                 this.setState({
                     subscription: subscription
                 })
@@ -114,6 +116,26 @@ class DrawingCanvas extends Component{
     unsubscribe = () => {
         console.log('unsubscribing');
         this.state.subscription.unsubscribe();
+    }
+
+    getActiveUserCount = () => {
+        console.log(JSON.stringify(this.props.selectedCanvas.canvasID));
+        fetchErr('http://localhost:8080/api/secured/canvas/active-users',
+                {method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization':  'Bearer ' + localStorage.getItem('JWT')
+                },
+                body: JSON.stringify(this.props.selectedCanvas.canvasID)
+                })
+        .then(response => response.json())
+        .then(json => {
+            console.log("returned from fetch: " + json)
+        })
+        .catch(err => {
+            console.log(err);
+            err.response.json().then(json => console.log(json));
+        });
     }
 
     handleIncomingMessages = (message) => {        

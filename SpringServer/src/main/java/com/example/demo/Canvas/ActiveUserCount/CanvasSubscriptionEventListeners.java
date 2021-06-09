@@ -2,6 +2,8 @@ package com.example.demo.Canvas.ActiveUserCount;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import com.example.demo.DemoApplication;
 
 import org.slf4j.Logger;
@@ -10,7 +12,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
@@ -27,6 +28,7 @@ public class CanvasSubscriptionEventListeners {
     }
 
 	@EventListener(SessionSubscribeEvent.class)
+    @Transactional
 	public void handleWSSubscribeListener (SessionSubscribeEvent event){
 		Integer canvasID = Integer.decode(extractCanvasID(event.getMessage()));
         String sessionID = extractSessionID(event.getMessage());
@@ -37,10 +39,10 @@ public class CanvasSubscriptionEventListeners {
 
         logger.info("User count before Subscribe Event = " + getNumberOfActiveUsers(canvasID));
         canvasUserCountRepo.incrementActiveUserCount(canvasID);
-        logger.info("User count after Subscribe Event = " + getNumberOfActiveUsers(canvasID));
 	}
 
     @EventListener(SessionUnsubscribeEvent.class)
+    @Transactional
 	public void handleWSUnsubscribeListener (SessionUnsubscribeEvent event){
         StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
         String sessionID = headers.getSessionId();
@@ -53,7 +55,6 @@ public class CanvasSubscriptionEventListeners {
 
             logger.info("User count before unsubscribe Event = " + getNumberOfActiveUsers(canvasID));
             canvasUserCountRepo.decrementActiveUserCount(canvasID);
-            logger.info("User count after unsubscribe Event = " + getNumberOfActiveUsers(canvasID));
 
             connectionSessionCanvasRepo.delete(sessionAndCanvas.get());
         }
@@ -64,10 +65,9 @@ public class CanvasSubscriptionEventListeners {
 
     private Integer getNumberOfActiveUsers(Integer canvasID){
         Integer numActiveUsers = 0;
-
         Optional<CanvasUserCount> canvasUserCount = canvasUserCountRepo.findById(canvasID);
         
-        // Returns 0 even if the canvasID does not exist
+        // Returns 0 if the canvasID does not exist or if there are no users
         if(canvasUserCount.isPresent()){
             numActiveUsers = canvasUserCount.get().getActive_users();
         }
