@@ -64,15 +64,10 @@ public class CanvasSubscriptionEventListeners {
 	}
 
     private Integer getNumberOfActiveUsers(Integer canvasID){
-        Integer numActiveUsers = 0;
         Optional<CanvasUserCount> canvasUserCount = canvasUserCountRepo.findById(canvasID);
-        
-        // Returns 0 if the canvasID does not exist or if there are no users
-        if(canvasUserCount.isPresent()){
-            numActiveUsers = canvasUserCount.get().getActive_users();
-        }
 
-        return numActiveUsers;
+        // Returns 0 if the canvasID does not exist in the DB or if it did but there are no users
+        return canvasUserCount.orElse(new CanvasUserCount(0,0)).getActive_users();
     }
 
     private String extractCanvasID(Message<byte[]> message){

@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auth0.jwt.interfaces.Claim;
@@ -68,7 +69,7 @@ public class CanvasController{
     }
 
     @GetMapping("api/secured/canvas/active-users")
-    public ResponseEntity<Integer> getCanvasActiveUserCount(@RequestBody Integer canvasID){
+    public ResponseEntity<Integer> getCanvasActiveUserCount(@RequestParam Integer canvasID){
         Integer numActiveUsers = canvasService.getNumberOfActiveUsers(canvasID);
         logger.info("There are " + numActiveUsers + " in canvasID = " + canvasID);
 
