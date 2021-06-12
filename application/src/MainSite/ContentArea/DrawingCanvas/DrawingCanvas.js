@@ -89,26 +89,28 @@ class DrawingCanvas extends Component{
                 console.log("Connected");
                 //This subscription is for listening to draw commands from all users subsrived to the canvas
                 const subscription = this.state.stompClient.subscribe("/topic/message/" + this.props.selectedCanvas.canvasID, this.handleIncomingMessages);
-
+                
                 //Check how many users on actively subscribed to the canvas
-                switch(this.getActiveUserCount()){
-                    case 0:
-                        //This indicates an issue
-                        console.warn("0 active users. Some issue is present.")
-                        break;
-                    case 1:
-                        //This indicates that we are the only person subscribed to the canvas right now.
-                        //Pull the canvas state from the DB
-                        console.log("First active user. Must pull canvas from DB.")
-                        break;
-                    default:
-                        //This indicates that there is at least one other person subscribed to the canvas.
-                        //Synchronize the active canvases instead of pulling from the DB since there could be unsaved changes.
-                        console.log("Other active users present. Must sync canvases.")
-                        var syncMessage = new Message("Sync", "");
-                        this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(syncMessage)})
-                        break;
-                }
+                this.getActiveUserCount().then((activeUserCount) => {
+                    switch(activeUserCount){
+                        case 0:
+                            //This indicates an issue
+                            console.warn("0 active users. Some issue is present.")
+                            break;
+                        case 1:
+                            //This indicates that we are the only person subscribed to the canvas right now.
+                            //Pull the canvas state from the DB
+                            console.log("First active user. Must pull canvas from DB.")
+                            break;
+                        default:
+                            //This indicates that there is at least one other person subscribed to the canvas.
+                            //Synchronize the active canvases instead of pulling from the DB since there could be unsaved changes.
+                            console.log("Other active users present. Must sync canvases.")
+                            var syncMessage = new Message("Sync", "");
+                            this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(syncMessage)})
+                            break;
+                    }
+                })
 
                 this.setState({
                     subscription: subscription
@@ -134,23 +136,23 @@ class DrawingCanvas extends Component{
         this.state.subscription.unsubscribe();
     }
 
-    getActiveUserCount = () => {
+    getActiveUserCount = async () => {
         var url = 'http://localhost:8080/api/secured/canvas/active-users' +'?canvasID=' + this.props.selectedCanvas.canvasID; 
-        fetchErr(url,
-                {method: 'GET', 
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization':  'Bearer ' + localStorage.getItem('JWT')
-                },
-                })
-        .then(response => response.json())
-        .then(json => {
-            console.log("returned from fetch: " + json)
-        })
-        .catch(err => {
-            console.log(err);
-            err.response.json().then(json => console.log(json));
-        });
+        var response = await fetch(url,
+            {method: 'GET', 
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':  'Bearer ' + localStorage.getItem('JWT')
+            },
+            });
+
+        if (!response.ok){
+            throw Error('Could not get active user count. Response Status: ' + response.status + ' ' + response.statusText);
+        }
+
+        var json = await response.json();
+        console.log("returned from fetch: " + json);
+        return json;
     }
 
     handleIncomingMessages = (message) => {        
