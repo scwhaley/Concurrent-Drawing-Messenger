@@ -4,6 +4,7 @@ import { Client } from '@stomp/stompjs';
 import Line from './Line';
 import Message from './Message';
 import fetchErr from '../../../Utils/FetchErr'
+import STOMPKafkaPayload from '../../../Welcome/STOMPKafkaPayload';
 
 class DrawingCanvas extends Component{
     constructor(){
@@ -12,6 +13,61 @@ class DrawingCanvas extends Component{
         this.setState({
             canvasIsPopulated: false
         })
+    }
+
+    subscribe = () => {
+        //STOMP Client setup
+        var stompClient = new Client({
+            connectHeaders: {
+                login: "guest",
+                passcode: "guest"
+            },
+            brokerURL: "ws://localhost:8080/greeting/websocket",
+            //brokerURL: "ws://localhost:8080/greeting",
+            reconnectDelay: 200,    
+            onStompError: (str) => {
+                console.log(str);
+            },
+            onWebSocketError: (str) => {
+                console.log(str);
+            },
+            onConnect: (frame) => {
+                console.log("Connected");
+                //This subscription is for listening to draw commands from all users subsrived to the canvas
+                const subscription = this.state.stompClient.subscribe("/topic/foo", this.handleIncomingMessages);
+                
+                fetchErr('http://localhost:8080/api/public/canvasConsumer',
+                {method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify("/topic/foo")
+                })
+                .then(response => {
+                    response.json();
+                })
+                .then(json => {
+                    console.log(json.message);
+                })
+                .catch(error => {
+                    console.log(JSON.stringify(error));
+                });
+
+                this.setState({
+                    subscription: subscription
+                })
+            }
+        });
+
+        this.state = {
+            stompClient: stompClient,
+            mouseIsDown: false,
+            canvas: null,
+            canvasContext: null,
+            canvasLastX: 0,
+            canvasLastY: 0,
+            subscription: null
+        };
     }
 
     componentDidMount = () => {
@@ -74,69 +130,12 @@ class DrawingCanvas extends Component{
         this.unsubscribe();
     }
 
-    subscribe = () => {
-        //STOMP Client setup
-        var stompClient;
-
-        var stompConfig = {
-            connectHeaders: {
-                login: "guest",
-                passcode: "guest"
-            },
-            brokerURL: "ws://localhost:8080/greeting/websocket",
-            reconnectDelay: 200,
-            onConnect: (frame) => {
-                console.log("Connected");
-                //This subscription is for listening to draw commands from all users subsrived to the canvas
-                const subscription = this.state.stompClient.subscribe("/topic/message/" + this.props.selectedCanvas.canvasID, this.handleIncomingMessages);
-                
-                //Check how many users on actively subscribed to the canvas
-                this.getActiveUserCount().then((activeUserCount) => {
-                    switch(activeUserCount){
-                        case 0:
-                            //This indicates an issue
-                            console.warn("0 active users. Some issue is present.")
-                            break;
-                        case 1:
-                            //This indicates that we are the only person subscribed to the canvas right now.
-                            //Pull the canvas state from the DB
-                            console.log("First active user. Must pull canvas from DB.")
-                            break;
-                        default:
-                            //This indicates that there is at least one other person subscribed to the canvas.
-                            //Synchronize the active canvases instead of pulling from the DB since there could be unsaved changes.
-                            console.log("Other active users present. Must sync canvases.")
-                            var syncMessage = new Message("Sync", "");
-                            this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(syncMessage)})
-                            break;
-                    }
-                })
-
-                this.setState({
-                    subscription: subscription
-                })
-            }
-        };
-
-        stompClient = new Client(stompConfig);
-
-        this.state = {
-            stompClient: stompClient,
-            mouseIsDown: false,
-            canvas: null,
-            canvasContext: null,
-            canvasLastX: 0,
-            canvasLastY: 0,
-            subscription: null
-        };
-    }
-
     unsubscribe = () => {
         console.log('unsubscribing');
         this.state.subscription.unsubscribe();
     }
 
-    getActiveUserCount = async () => {
+/*     getActiveUserCount = async () => {
         var url = 'http://localhost:8080/api/secured/canvas/active-users' +'?canvasID=' + this.props.selectedCanvas.canvasID; 
         var response = await fetch(url,
             {method: 'GET', 
@@ -153,32 +152,21 @@ class DrawingCanvas extends Component{
         var json = await response.json();
         console.log("returned from fetch: " + json);
         return json;
-    }
+    } */
 
-    handleIncomingMessages = (message) => {        
+    handleIncomingMessages = (message) => {     
+        
         // Parse the message
         const payload = JSON.parse(message.body);
-        const content = payload.content;
+        const username = payload.key;
+        var value = JSON.parse(payload.value)
+        const content = value.content;
+        const type = value.type;
 
         // Call the appropriate function based on message type
-        switch(payload.type) {
+        switch(type) {
             case "Draw":
                 this.drawLine(this.state.canvasContext, content.x1, content.y1, content.x2, content.y2);
-                if(!this.state.canvasIsPopulated){
-                    this.setState({canvasIsPopulated: true});
-                }
-                break;
-            case "Refresh":
-                console.log('Handling Refresh Message');
-                this.drawImageToCanvas(this.state.canvas, this.state.canvasContext, content);
-                if(!this.state.canvasIsPopulated){
-                    this.setState({canvasIsPopulated: true});
-                }
-                break;
-            case "Sync":
-                if(this.state.canvasIsPopulated){
-                    this.handleSync(this.state.canvas);
-                }
                 break;
             default:
                 break;
@@ -196,12 +184,12 @@ class DrawingCanvas extends Component{
         img.src = imgDataURL;
     }
 
-    // Sends a message containing an dataURL representing the current state of the canvas
+/*     // Sends a message containing an dataURL representing the current state of the canvas
     handleSync = (canvas) => {
         var canvasDataURL = canvas.toDataURL();
         var message = new Message("Refresh", canvasDataURL);
         this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(message)});
-    }
+    } */
 
     // Drawing functions
     canvasOnMouseDown = (e) => {
@@ -232,7 +220,11 @@ class DrawingCanvas extends Component{
         if(this.state.mouseIsDown){
             var line = new Line(this.state.canvasLastX, this.state.canvasLastY, e.offsetX, e.offsetY);
             var message = new Message("Draw", line);
-            this.state.stompClient.publish({destination: "/topic/message/" + this.props.selectedCanvas.canvasID, body: JSON.stringify(message)});
+            //replacer necessary to make sure that all of the nested properties (Line's properties) are stringified as well
+            var payload = new STOMPKafkaPayload("foo", "username", JSON.stringify(message, function replacer(key,value){return value;}));
+
+            this.state.stompClient.publish({destination: "/app/test", body: JSON.stringify(payload)});
+
             this.setState({
                 canvasLastX: e.offsetX,
                 canvasLastY: e.offsetY

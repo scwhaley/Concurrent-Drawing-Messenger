@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class CanvasController{
     
     private Logger logger = LoggerFactory.getLogger(DemoApplication.class);
+
+    @Autowired
+    private SimpMessagingTemplate simp; 
 
     @Autowired
     private CanvasService canvasService;
@@ -65,7 +69,7 @@ public class CanvasController{
         Canvas createdCanvas = canvasService.createAndSubscribeToCanvas(canvasName, userID);
 
         logger.info("Created CanvasID = " + createdCanvas.getCanvasID());
-        return new ResponseEntity<Canvas>(createdCanvas, null, HttpStatus.OK);
+        return new ResponseEntity<Canvas>(createdCanvas, null, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("api/secured/canvas/active-users")
@@ -75,5 +79,15 @@ public class CanvasController{
 
         return new ResponseEntity<Integer>(numActiveUsers, null, HttpStatus.OK);
     }
-}
 
+    @PostMapping("api/public/canvasConsumer")
+    public ResponseEntity<Integer> createCanvasConsumer(@RequestBody String stompClientTopic){
+        logger.info("Recieved createCanvasConsumer POST request");
+        CanvasConsumerRunner canvasConsumer = new CanvasConsumerRunner(simp, stompClientTopic);
+        Thread t = new Thread(canvasConsumer);
+        t.start();
+        logger.info("started new thread: " + t.getId());
+        
+        return new ResponseEntity<Integer>(12, null, HttpStatus.ACCEPTED);
+    }
+}

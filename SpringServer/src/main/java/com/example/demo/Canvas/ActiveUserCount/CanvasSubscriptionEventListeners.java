@@ -27,41 +27,41 @@ public class CanvasSubscriptionEventListeners {
         this.connectionSessionCanvasRepo = connectionSessionCanvasRepo;
     }
 
-	@EventListener(SessionSubscribeEvent.class)
-    @Transactional
-	public void handleWSSubscribeListener (SessionSubscribeEvent event){
-		Integer canvasID = Integer.decode(extractCanvasID(event.getMessage()));
-        String sessionID = extractSessionID(event.getMessage());
-		logger.info("Recieved WS Session Subscribe Event to canvasID: " + canvasID + " for sessionID: " + sessionID);
+	// @EventListener(SessionSubscribeEvent.class)
+    // @Transactional
+	// public void handleWSSubscribeListener (SessionSubscribeEvent event){
+	// 	Integer canvasID = Integer.decode(extractCanvasID(event.getMessage()));
+    //     String sessionID = extractSessionID(event.getMessage());
+	// 	logger.info("Recieved WS Session Subscribe Event to canvasID: " + canvasID + " for sessionID: " + sessionID);
 
-        ConnectionSessionCanvas sessionAndCanvas = new ConnectionSessionCanvas(sessionID, canvasID);
-        connectionSessionCanvasRepo.save(sessionAndCanvas);
+    //     ConnectionSessionCanvas sessionAndCanvas = new ConnectionSessionCanvas(sessionID, canvasID);
+    //     connectionSessionCanvasRepo.save(sessionAndCanvas);
 
-        logger.info("User count before Subscribe Event = " + getNumberOfActiveUsers(canvasID));
-        canvasUserCountRepo.incrementActiveUserCount(canvasID);
-	}
+    //     logger.info("User count before Subscribe Event = " + getNumberOfActiveUsers(canvasID));
+    //     canvasUserCountRepo.incrementActiveUserCount(canvasID);
+	// }
 
-    @EventListener(SessionUnsubscribeEvent.class)
-    @Transactional
-	public void handleWSUnsubscribeListener (SessionUnsubscribeEvent event){
-        StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
-        String sessionID = headers.getSessionId();
+    // @EventListener(SessionUnsubscribeEvent.class)
+    // @Transactional
+	// public void handleWSUnsubscribeListener (SessionUnsubscribeEvent event){
+    //     StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
+    //     String sessionID = headers.getSessionId();
 
-        Optional<ConnectionSessionCanvas> sessionAndCanvas = connectionSessionCanvasRepo.findById(sessionID);
+    //     Optional<ConnectionSessionCanvas> sessionAndCanvas = connectionSessionCanvasRepo.findById(sessionID);
 
-        if(sessionAndCanvas.isPresent()){
-            Integer canvasID = sessionAndCanvas.get().getCanvas_ID();
-            logger.info("Recieved WS Session unsubscribe Event to canvasID: " + canvasID);
+    //     if(sessionAndCanvas.isPresent()){
+    //         Integer canvasID = sessionAndCanvas.get().getCanvas_ID();
+    //         logger.info("Recieved WS Session unsubscribe Event to canvasID: " + canvasID);
 
-            logger.info("User count before unsubscribe Event = " + getNumberOfActiveUsers(canvasID));
-            canvasUserCountRepo.decrementActiveUserCount(canvasID);
+    //         logger.info("User count before unsubscribe Event = " + getNumberOfActiveUsers(canvasID));
+    //         canvasUserCountRepo.decrementActiveUserCount(canvasID);
 
-            connectionSessionCanvasRepo.delete(sessionAndCanvas.get());
-        }
-        else{
-            logger.warn("Recieved unsubscribe event for a session not linked to a canvas");
-        }		
-	}
+    //         connectionSessionCanvasRepo.delete(sessionAndCanvas.get());
+    //     }
+    //     else{
+    //         logger.warn("Recieved unsubscribe event for a session not linked to a canvas");
+    //     }		
+	// }
 
     private Integer getNumberOfActiveUsers(Integer canvasID){
         Optional<CanvasUserCount> canvasUserCount = canvasUserCountRepo.findById(canvasID);

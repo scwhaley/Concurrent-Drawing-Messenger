@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link, Redirect} from 'react-router-dom';
+import STOMPTestForKafka from './STOMPTestForKafka';
 import './Welcome.css'
 
 function Welcome(){
@@ -14,6 +15,7 @@ function Welcome(){
                 <h2 className="subtitle">Draw together with your friends to make a masterpiece!</h2>
                 <Link className='welcomeLink loginLink' to="/login">Login</Link>
                 <Link className='welcomeLink signupLink' to="/signup">Get Started</Link>
+                <STOMPTestForKafka/>
             </div>
         );
     }
