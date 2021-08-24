@@ -133,6 +133,27 @@ class DrawingCanvas extends Component{
     unsubscribe = () => {
         console.log('unsubscribing');
         this.state.subscription.unsubscribe();
+
+        fetchErr('http://localhost:8080/api/public/canvasConsumer',
+        {method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify("/topic/foo")
+        })
+        .then(response => {
+            response.json();
+        })
+        .then(json => {
+            console.log(json.message);
+        })
+        .catch(error => {
+            console.log(JSON.stringify(error));
+        });
+
+        this.setState({
+            subscription: subscription
+        })
     }
 
 /*     getActiveUserCount = async () => {

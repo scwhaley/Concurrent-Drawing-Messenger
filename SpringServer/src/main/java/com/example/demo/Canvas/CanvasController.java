@@ -34,6 +34,9 @@ public class CanvasController{
 
     @Autowired
     private CanvasService canvasService;
+
+    @Autowired
+    private CanvasConsumerThreadMap threadMap;
     
     @GetMapping("api/secured/subscribed-canvas")
     public ResponseEntity<List<Canvas>> getSubscribedCanvases() throws JsonProcessingException {
@@ -69,6 +72,7 @@ public class CanvasController{
         Canvas createdCanvas = canvasService.createAndSubscribeToCanvas(canvasName, userID);
 
         logger.info("Created CanvasID = " + createdCanvas.getCanvasID());
+
         return new ResponseEntity<Canvas>(createdCanvas, null, HttpStatus.ACCEPTED);
     }
 
@@ -81,13 +85,23 @@ public class CanvasController{
     }
 
     @PostMapping("api/public/canvasConsumer")
-    public ResponseEntity<Integer> createCanvasConsumer(@RequestBody String stompClientTopic){
+    public ResponseEntity<Long> createCanvasConsumer(@RequestBody String stompClientTopic){
         logger.info("Recieved createCanvasConsumer POST request");
         CanvasConsumerRunner canvasConsumer = new CanvasConsumerRunner(simp, stompClientTopic);
-        Thread t = new Thread(canvasConsumer);
-        t.start();
-        logger.info("started new thread: " + t.getId());
+        Thread thread = new Thread(canvasConsumer);
+        threadMap.addThread(thread, canvasConsumer);
+        thread.start();
+        logger.info("started new thread: " + thread.getId());
         
-        return new ResponseEntity<Integer>(12, null, HttpStatus.ACCEPTED);
+        return new ResponseEntity<Long>(thread.getId(), null, HttpStatus.ACCEPTED);
+    }
+
+    //Need to change to DELETE request
+    @PostMapping("api/public/canvasConsumer/delete")
+    public ResponseEntity<Long> deleteCanvasConsumer(@RequestBody long threadId){
+        logger.info("Recieved createCanvasConsumer delete request");
+        threadMap.deleteThread(threadId);
+        
+        return new ResponseEntity<Long>(null, null, HttpStatus.OK);
     }
 }
