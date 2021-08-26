@@ -69,10 +69,12 @@ public class CanvasConsumerRunner implements Runnable{
             //Ignore for now
         } finally {
             consumer.close();
+            logger.info("Thread ID: " + Thread.currentThread().getId() + " Message: Closing thread");
         }
     }
 
     private void sendToClient(ConsumerRecord<String, String> record){
+        logger.info(System.currentTimeMillis() + ": key = " + record.key() + " consume");
         simpMessagingTemplate.convertAndSend("/topic/foo", new DemoStompKafkaPayload(record.topic(), record.key(), record.value()));
     }
 
@@ -80,7 +82,6 @@ public class CanvasConsumerRunner implements Runnable{
     public void shutdown() {
         closed.set(true);
         consumer.wakeup();
-        logger.info("Thread ID: " + Thread.currentThread().getId() + " Message: Closing thread");
     }
     
 }

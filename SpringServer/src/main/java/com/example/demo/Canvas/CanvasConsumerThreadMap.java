@@ -66,10 +66,13 @@ public class CanvasConsumerThreadMap {
         }
 
         canvasConsumer.shutdown();
-        try{
-            thread.join();
-        } catch(InterruptedException e){
-            e.printStackTrace();
-        }
+    }
+
+    //Shuts down all the canvas consumers before removing them and the hosting threads from the stores
+    public void deleteAllThreads(){
+        canvasConsumerStore.forEach((k,v) -> v.shutdown());
+
+        threadStore.clear();
+        canvasConsumerStore.clear();
     }
 }

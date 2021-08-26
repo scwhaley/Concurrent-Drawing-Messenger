@@ -28,7 +28,8 @@ public class DemoSTOMPController {
 
     @MessageMapping("/test")
     public void processMessageFromClient(@Payload DemoStompKafkaPayload message, Principal principal) throws JsonProcessingException{
-        logger.info("Recieved message to /app/test");
+        
+        logger.info(System.currentTimeMillis() + ": Key = " + message.key + " produce");
         
         ProducerRecord<String, String> record = new ProducerRecord<String,String>(message.topic, message.key, message.value);
         producer.send(record);

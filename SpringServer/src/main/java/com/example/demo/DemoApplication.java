@@ -1,14 +1,19 @@
 package com.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Properties;
+
+import com.example.demo.Canvas.CanvasConsumerThreadMap;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -19,6 +24,8 @@ import org.slf4j.LoggerFactory;
 public class DemoApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
+	@Autowired
+	private CanvasConsumerThreadMap canvasConsumerThreadMap;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -46,5 +53,11 @@ public class DemoApplication {
 		return (args) -> {
 			logger.info("Server started");
 		};
+	}
+
+	@EventListener
+	public void handleApplicationShutdown(ContextClosedEvent event){
+		//Make sure that all of the canvasConsumer threads are cleaned up on application shutdown
+		canvasConsumerThreadMap.deleteAllThreads();
 	}
 }

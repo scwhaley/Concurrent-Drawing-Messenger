@@ -16,6 +16,7 @@ class DrawingCanvas extends Component{
     }
 
     subscribe = () => {
+        var canvasConsumerID;
         //STOMP Client setup
         var stompClient = new Client({
             connectHeaders: {
@@ -44,10 +45,14 @@ class DrawingCanvas extends Component{
                 body: JSON.stringify("/topic/foo")
                 })
                 .then(response => {
-                    response.json();
+                    return response.json();
                 })
                 .then(json => {
-                    console.log(json.message);
+                    console.log(json);
+                    canvasConsumerID = json;
+                    this.setState({
+                        canvasConsumerID: canvasConsumerID
+                    })
                 })
                 .catch(error => {
                     console.log(JSON.stringify(error));
@@ -132,27 +137,31 @@ class DrawingCanvas extends Component{
 
     unsubscribe = () => {
         console.log('unsubscribing');
+        console.log(this.state.canvasConsumerID);
         this.state.subscription.unsubscribe();
 
-        fetchErr('http://localhost:8080/api/public/canvasConsumer',
+        console.log(JSON.stringify(this.state.canvasConsumerID));
+
+        fetchErr('http://localhost:8080/api/public/canvasConsumer/delete',
         {method: 'POST', 
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify("/topic/foo")
+        body: JSON.stringify(this.state.canvasConsumerID)
         })
         .then(response => {
-            response.json();
+            return response.json();
         })
         .then(json => {
-            console.log(json.message);
+            console.log(json);
         })
         .catch(error => {
             console.log(JSON.stringify(error));
         });
 
         this.setState({
-            subscription: subscription
+            subscription: null,
+            canvasConsumerID: null
         })
     }
 
